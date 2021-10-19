@@ -4,14 +4,12 @@ import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class what extends TelegramLongPollingBot{
@@ -28,7 +26,7 @@ public class what extends TelegramLongPollingBot{
     @SneakyThrows
     private void handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
-        execute(SendMessage.builder().chatId(message.getChatId().toString()).text(transport.getTransport(callbackQuery.getData())).build());
+        execute(SendMessage.builder().chatId(message.getChatId().toString()).text(Transport.getTransport(callbackQuery.getData())).build());
     }
 
 
@@ -57,10 +55,12 @@ public class what extends TelegramLongPollingBot{
                                 .build());
                         break;
                     case "/get_time":
-                        execute(SendMessage.builder().chatId(message.getChatId().toString()).text(transport.getTransport("/get_time")).build());
+                        execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
+                            Transport.getTransport("/get_time")).build());
                         break;
                     case "/help":
-                        execute(SendMessage.builder().chatId(message.getChatId().toString()).text(transport.getTransport("/help")).build());
+                        execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
+                            Transport.getTransport("/help")).build());
                         break;
                 }
 
@@ -70,7 +70,7 @@ public class what extends TelegramLongPollingBot{
           if (message.hasText()){
             String messages = message.getText().toString();
             execute(SendMessage.builder()
-                    .text(transport.getTransport(messages))
+                    .text(Transport.getTransport(messages))
                     .chatId(message.getChatId().toString())
                     .build());
         }

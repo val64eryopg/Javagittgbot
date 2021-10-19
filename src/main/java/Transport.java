@@ -1,4 +1,4 @@
-public class transport {
+public class Transport {
     public static String getTransport(String str){
         String string ="Введите итересующие вас время и задачу в формате\n 66:66-раскрасить открытку";
         if (str.matches("\\d{2}\\D\\d{2}\\D\\D+" )){
