@@ -1,16 +1,16 @@
 import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class logic {
 
 
-//    public static List<String> inicialization(String str){
-//        List<String> d;
-//        d.add(str);
-//
-//        return d;
-//    }
+    public static List<String> inicialization(String str)
+    {
+        ArrayList<String> myArrayList = new ArrayList<String>();
+    return myArrayList;
+    }
+
+
 
     public static String gettime(){
         Date j = new Date();
