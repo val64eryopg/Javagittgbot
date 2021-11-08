@@ -11,10 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
 import java.util.GregorianCalendar;
 
-public class what extends TelegramLongPollingBot{
-
+public class what extends TelegramLongPollingBot {
 
 
     @Override
@@ -28,61 +28,56 @@ public class what extends TelegramLongPollingBot{
     }
 
 
-
     @SneakyThrows
     private void handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
         execute(SendMessage.builder()
                 .chatId(message.getChatId().toString()).
-                            text(getCommand(callbackQuery.getData())).
+                text(getCommand(callbackQuery.getData())).
                 build());
     }
 
 
+    public static String getCommand(String command) {
 
-     public String getCommand(String command) {
+        String string = "Введите итересующие вас время и задачу в формате\n 66:66-раскрасить открытку";
 
-         String string = "Введите итересующие вас время и задачу в формате\n 66:66-раскрасить открытку";
+        if (command.matches("\\d{2}\\D\\d{2}\\D\\D+")) {
+            return "вы записали свою задачу на " + command;
+        }
 
-         if (command.matches("\\d{2}\\D\\d{2}\\D\\D+")) {
-             return "вы записали свою задачу на " + command;
-         }
+        switch (command) {
+            case "Monday":
+                return string;
+            case "Tuesday":
+                return string + "";
+            case "Friday":
+                return "да ладно это тоже не очень день для дел " + string;
+            case "Saturday":
+                return string + "суббота";
 
-         switch (command) {
-             case "Monday":
-                 return string;
-             case "Tuesday":
-                 return string + "";
-             case "Friday":
-                 return "да ладно это тоже не очень день для дел " + string;
-             case "Saturday":
-                 return string + "суббота";
-
-             default:
-                 return "пока наш бот не умеет говорить \n" +
-                         "для озкаомления с возможностью бота введите /help";
-
-
-         }
-     }
-
+            default:
+                return "пока наш бот не умеет говорить \n" +
+                        "для озкаомления с возможностью бота введите /help";
+        }
+    }
 
 
     @SneakyThrows
-    private void handleMessage(Message message){
-        if(message.hasText() && message.hasEntities()){
+    private void handleMessage(Message message) {
+        if (message.hasText() && message.hasEntities()) {
             Optional<MessageEntity> commandEntity =
                     message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
-            if(commandEntity.isPresent()){
+            if (commandEntity.isPresent()) {
                 String command =
                         message
                                 .getText()
                                 .substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
 
-                switch (command){
-                    case"/plans_for_Week":
+                switch (command) {
+                    case "/plans_for_Week":
                         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-                        for (season season :season.values() ){
+                        for (season season : season.values()) {
                             buttons.add(
                                     Arrays.asList(InlineKeyboardButton.builder().text(season.name()).callbackData(season.toString()).build()));
                         }
@@ -94,19 +89,19 @@ public class what extends TelegramLongPollingBot{
                         break;
                     case "/get_time":
                         execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
-                            logic.gettime()).build());
+                                logic.getTime(logic.getData())).build());
                         break;
                     case "/help":
                         execute(SendMessage.builder().
                                 chatId(message.getChatId().toString()).
                                 text("В нашем боте есть комманды:\n" +
-                                "/get_time-возвращает точное время\n" +
-                                " и\n" +
-                                "/plans_for_today-составить план на сегодня").
+                                        "/get_time-возвращает точное время\n" +
+                                        " и\n" +
+                                        "/plans_for_today-составить план на сегодня").
                                 build());
                         break;
 
-                    case"/plans_for_today":
+                    case "/plans_for_today":
                         System.out.println("/plans_for_today");
                         break;
                     case "plans_for_month":
@@ -115,10 +110,8 @@ public class what extends TelegramLongPollingBot{
                 }
 
             }
-        }
-      else
-          if (message.hasText()){
-              System.out.println("что ");
+        } else if (message.hasText()) {
+            System.out.println("что ");
             String messages = message.getText();
             execute(SendMessage.builder()
                     .text(getCommand(messages))
@@ -140,7 +133,7 @@ public class what extends TelegramLongPollingBot{
     @SneakyThrows
     public static void main(String[] args) {
         Calendar c2 = new GregorianCalendar();
-       System.out.println(c2.get(Calendar.MONTH));
+        System.out.println(c2.get(Calendar.MONTH));
         what bot = new what();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
