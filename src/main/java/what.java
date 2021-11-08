@@ -1,5 +1,5 @@
 import java.util.*;
-import javafx.scene.control.ListCellBuilder;
+
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -11,8 +11,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import java.util.GregorianCalendar;
 
 public class what extends TelegramLongPollingBot{
+
+
 
     @Override
     @SneakyThrows
@@ -23,11 +26,46 @@ public class what extends TelegramLongPollingBot{
             handleMessage(update.getMessage());
         }
     }
+
+
+
     @SneakyThrows
     private void handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
-        execute(SendMessage.builder().chatId(message.getChatId().toString()).text(Transport.getTransport(callbackQuery.getData())).build());
+        execute(SendMessage.builder()
+                .chatId(message.getChatId().toString()).
+                            text(getCommand(callbackQuery.getData())).
+                build());
     }
+
+
+
+     public String getCommand(String command) {
+
+         String string = "Введите итересующие вас время и задачу в формате\n 66:66-раскрасить открытку";
+
+         if (command.matches("\\d{2}\\D\\d{2}\\D\\D+")) {
+             return "вы записали свою задачу на " + command;
+         }
+
+         switch (command) {
+             case "Monday":
+                 return string;
+             case "Tuesday":
+                 return string + "";
+             case "Friday":
+                 return "да ладно это тоже не очень день для дел " + string;
+             case "Saturday":
+                 return string + "суббота";
+
+             default:
+                 return "пока наш бот не умеет говорить \n" +
+                         "для озкаомления с возможностью бота введите /help";
+
+
+         }
+     }
+
 
 
     @SneakyThrows
@@ -42,7 +80,7 @@ public class what extends TelegramLongPollingBot{
                                 .substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
 
                 switch (command){
-                    case"/get_data":
+                    case"/plans_for_Week":
                         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
                         for (season season :season.values() ){
                             buttons.add(
@@ -56,11 +94,23 @@ public class what extends TelegramLongPollingBot{
                         break;
                     case "/get_time":
                         execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
-                            Transport.getTransport("/get_time")).build());
+                            logic.gettime()).build());
                         break;
                     case "/help":
-                        execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
-                            Transport.getTransport("/help")).build());
+                        execute(SendMessage.builder().
+                                chatId(message.getChatId().toString()).
+                                text("В нашем боте есть комманды:\n" +
+                                "/get_time-возвращает точное время\n" +
+                                " и\n" +
+                                "/plans_for_today-составить план на сегодня").
+                                build());
+                        break;
+
+                    case"/plans_for_today":
+                        System.out.println("/plans_for_today");
+                        break;
+                    case "plans_for_month":
+                        System.out.println("/plans_for_month");
                         break;
                 }
 
@@ -68,9 +118,10 @@ public class what extends TelegramLongPollingBot{
         }
       else
           if (message.hasText()){
-            String messages = message.getText().toString();
+              System.out.println("что ");
+            String messages = message.getText();
             execute(SendMessage.builder()
-                    .text(Transport.getTransport(messages))
+                    .text(getCommand(messages))
                     .chatId(message.getChatId().toString())
                     .build());
         }
@@ -78,22 +129,22 @@ public class what extends TelegramLongPollingBot{
 
     @Override
     public String getBotUsername() {
-        return "@testbootexeption_bot";
+        return "@Router_time_bot";
     }
 
     @Override
     public String getBotToken() {
-        return "2031914374:AAEA0KWp22dLFjHibAyjjDna3UMlJylQ2oA";
+        return gettoken.getbottoken();
     }
 
     @SneakyThrows
     public static void main(String[] args) {
+        Calendar c2 = new GregorianCalendar();
+       System.out.println(c2.get(Calendar.MONTH));
         what bot = new what();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
     }
 
 }
-enum season{
-    Monday,Tuesday,Wednesday,Thursday, Friday,Saturday,Sunday
-}
+
