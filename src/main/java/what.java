@@ -1,6 +1,7 @@
 import java.util.*;
 
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.GregorianCalendar;
 
@@ -97,7 +99,7 @@ public class what extends TelegramLongPollingBot {
                                 text("В нашем боте есть комманды:\n" +
                                         "/get_time-возвращает точное время\n" +
                                         " и\n" +
-                                        "/plans_for_today-составить план на сегодня").
+                                        "/plans_for_Week-составить план на сегодня").
                                 build());
                         break;
 
@@ -125,10 +127,17 @@ public class what extends TelegramLongPollingBot {
         return "@Router_time_bot";
     }
 
+    @Test
+    public void getBotUsernameTest(){
+        assertNotNull(getBotUsername());
+        assertEquals(getBotUsername(), "@Router_time_bot");
+    }
+
     @Override
     public String getBotToken() {
         return gettoken.getbottoken();
     }
+
 
     @SneakyThrows
     public static void main(String[] args) {
