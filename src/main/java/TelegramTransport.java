@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.GregorianCalendar;
 
-public class what extends TelegramLongPollingBot {
+public class TelegramTransport extends TelegramLongPollingBot {
 
 
     @Override
@@ -79,7 +79,7 @@ public class what extends TelegramLongPollingBot {
                 switch (command) {
                     case "/plans_for_Week":
                         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-                        for (season season : season.values()) {
+                        for (Season season : Season.values()) {
                             buttons.add(
                                     Arrays.asList(InlineKeyboardButton.builder().text(season.name()).callbackData(season.toString()).build()));
                         }
@@ -91,7 +91,7 @@ public class what extends TelegramLongPollingBot {
                         break;
                     case "/get_time":
                         execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
-                                logic.getTime(logic.getData())).build());
+                                Logic.getTime(Logic.getData())).build());
                         break;
                     case "/help":
                         execute(SendMessage.builder().
@@ -143,7 +143,7 @@ public class what extends TelegramLongPollingBot {
     public static void main(String[] args) {
         Calendar c2 = new GregorianCalendar();
         System.out.println(c2.get(Calendar.MONTH));
-        what bot = new what();
+        TelegramTransport bot = new TelegramTransport();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
     }

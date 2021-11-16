@@ -2,7 +2,7 @@ import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class logic {
+public class Logic {
 
 
     public static String getTime(Date date) {
