@@ -87,4 +87,19 @@ class LogicTest {
         } catch (ClassNotFoundException | SQLException ex) {
         }
     }
+
+    @Test
+    void testDatabaseDelTask(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
+            String chat_id = "58";
+            database.addTask(chat_id, "2024-10-20", "22:50:00", "popit pivo");
+            assertNotNull(database.checkTasks(chat_id));
+            database.delTask(chat_id, "2024-10-20", "22:50:00");
+            assertNull(database.checkTasks(chat_id));
+
+        } catch (ClassNotFoundException | SQLException ex) {
+        }
+    }
 }
