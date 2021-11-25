@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.sql.*;
 
 class Database {
-<<<<<<< HEAD
   public static String USER_NAME = getdatabase.getUserName();
   public static String PASSWORD = getdatabase.getPassword();
   public static String URL = getdatabase.getUrl();
