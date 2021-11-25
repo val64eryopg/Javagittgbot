@@ -4,7 +4,7 @@ import java.sql.*;
 class Database {
   public static String USER_NAME = null;
   public static String PASSWORD = null;
-  public static String URL = null;
+  public static String URL = getdatabase.GetURL();
   public static Statement statement;
   public static Connection connection;
 
