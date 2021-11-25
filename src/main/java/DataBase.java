@@ -34,67 +34,50 @@ class Database {
       throw new RuntimeException();
     }
   }
-
-  void registration(String fname, String lname)
-      throws SQLException, ClassNotFoundException {
-    // Registers new user
-    // input firstname and lastname
-    // makes request in database
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    statement.executeUpdate("INSERT INTO users(firstname, lastname) value ('"+fname+"','"+lname+"')");
+  
+  boolean delTask(String chat_id, String date_task, String time_task) throws SQLException, ClassNotFoundException{
+    try{
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      statement.executeUpdate(
+          "Delete from tasks where chat_id = '"+chat_id+"', date_task = '"+date_task+"', time_task = '"+time_task+"'");
+    } catch (Exception e){
+      return false;
+    }
+    return true;
   }
 
-//  void checkDatabase() throws ClassNotFoundException, SQLException {
-//    Class.forName("com.mysql.cj.jdbc.Driver");
-//    ResultSet resultSet = statement.executeQuery("SELECT * from users");
-//
-//    while(resultSet.next()){
-//      System.out.println(resultSet.getString(1)+ " " +
-//          resultSet.getString(2) + " " +
-//          resultSet.getString(3));
-//    }
-//
-//    resultSet = statement.executeQuery("SELECT * from tasks");
-//
-//    while(resultSet.next()){
-//      System.out.println(resultSet.getString(1)+ " " +
-//          resultSet.getString(2) + " " +
-//          resultSet.getString(3) + " " +
-//          resultSet.getString(4) + " " +
-//          resultSet.getString(5));
-//    }
-//  }
-
-  void addTask(String lname, String date_task, String time_task, String task) throws SQLException, ClassNotFoundException {
+  boolean addTask(String chat_id, String date_task, String time_task, String task) throws SQLException, ClassNotFoundException {
     // Method created for add task to database
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    ResultSet resultSet = statement.executeQuery("SELECT * from users where lastname = '"+lname+"'");
-    String fname_id = "0";
-    if (resultSet.next()){
-      fname_id = resultSet.getString(1);
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      statement.executeUpdate(
+          "INSERT INTO tasks(name_id, date_task, time_task, task) value ('" + chat_id + "','"
+              + date_task + "', '" + time_task + "', '" + task + "')");
+    } catch (Exception e){
+      return false;
     }
-    System.out.println(fname_id);
-    statement.executeUpdate("INSERT INTO tasks(name_id, date_task, time_task, task) value ('"+fname_id+"','"+date_task+"', '"+time_task+"', '"+task+"')");
+
+    return true;
   }
 
-  ArrayList<String> checkTasks(String lname) throws ClassNotFoundException, SQLException {
+  ArrayList<String> checkTasks(String chat_id) throws ClassNotFoundException, SQLException {
     // Method use lastname only
-    //
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    ResultSet resultSet = statement.executeQuery("SELECT * from users where lastname = '"+lname+"'");
-    String fname_id = "0";
     ArrayList<String> result = new ArrayList<String>(){};
-    if (resultSet.next()){
-      fname_id = resultSet.getString(1); // return id user
-    }
-    resultSet = statement.executeQuery("SELECT * from tasks where name_id = '"+fname_id+"'"); // return table tasks
-    // where name_id = fname_id
-    while(resultSet.next()){
-      result.add(resultSet.getString(1)+ " " +
-          resultSet.getString(2) + " " +
-          resultSet.getString(3) + " " +
-          resultSet.getString(4) + " " +
-          resultSet.getString(5));
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+
+      ResultSet resultSet = statement.executeQuery(
+          "SELECT * from tasks where chat_id = '" + chat_id + "'"); // return table tasks
+
+      while (resultSet.next()) {
+        result.add(resultSet.getString(1) + " " +
+            resultSet.getString(2) + " " +
+            resultSet.getString(3) + " " +
+            resultSet.getString(4) + " " +
+            resultSet.getString(5));
+      }
+    } catch (Exception e){
+      return null;
     }
     return result;
   }
