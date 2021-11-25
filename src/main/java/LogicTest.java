@@ -91,7 +91,7 @@ class LogicTest {
             Database database = new Database("root", "root", "");
             String lname = "pupa";
             String fname = "1";
-            database.registration(lname, fname);
+
             ResultSet resultSet = Database.statement.executeQuery("SELECT * from users where firstname = '"+fname+"'");
             String fnamecheck = resultSet.getString(2);
             String lnamecheck = resultSet.getString(3);
