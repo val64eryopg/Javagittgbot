@@ -34,7 +34,7 @@ class LogicTest {
     void testDatabaseIsNotNull() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
+            Database database = new Database("root", "root", "");
             assertNotNull(database);
         } catch (ClassNotFoundException ex) {
         }
@@ -44,31 +44,24 @@ class LogicTest {
     void testDatabaseAddTask() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
-            String chat_id = "57";
-            database.addTask(chat_id, "2021-10-24", "22:50:00", "popit pivo");
-            String date_task ="";
-            String time_task ="";
-            String task ="";
-            try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146", "sql11453146", "lAMgQUpd9q")) {
-                Statement statement = conn.createStatement();
-                ResultSet resultSet = statement.executeQuery(
-                        "SELECT * from tasks where chat_id = '" + chat_id + "'");
-                assertNotNull(resultSet);
-                if (resultSet.next()){
-                    date_task = resultSet.getString(3);
-                    time_task = resultSet.getString(4);
-                    task = resultSet.getString(5);
-                    boolean i = database.delTask(chat_id,"2021-10-24","22:50:00");
-                    /////
-                    /////
-                }
+            Database database = new Database("root", "root", "");
+            String lname = " ";
+            database.addTask(lname, "24.10.2021", "22:50", "popit pivo");
+            ResultSet resultSet = Database.statement.executeQuery("SELECT * from users where lastname = '" + lname + "'");
+            String fname_id = "0";
+            if (resultSet.next()) {
+                fname_id = resultSet.getString(1);
             }
-            assertEquals(date_task, "2021-10-24");
-            assertEquals(time_task, "22:50:00");
+            resultSet = Database.statement.executeQuery("SELECT * from tasks where name_id = '" + fname_id + "'");
+            String date_task = resultSet.getString(3);
+            String time_task = resultSet.getString(4);
+            String task = resultSet.getString(5);
+            /////
+            /////
+            assertEquals(date_task, "24.10.2021");
+            assertEquals(time_task, "22:50");
             assertEquals(task, "popit pivo");
         } catch (ClassNotFoundException ex) {
-            assertTrue(1 == 2);
         }
     }
 
@@ -76,14 +69,36 @@ class LogicTest {
     void testDatabaseCheckTasks() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
-            String chat_id = "54";
-            database.addTask(chat_id, "2024-10-20", "22:50:00", "popit pivo");
-            ArrayList<String> check = database.checkTasks(chat_id);
+            Database database = new Database("root", "root", "");
+            String lname = "pupa";
+            database.addTask(lname, "24.10.2021", "22:50", "popit pivo");
+            database.addTask(lname, "25.12.2022", "10:30", "Poigrat v dotu");
+            ArrayList<String> check = database.checkTasks(lname);
             assertNotNull(check);
-            String checksStr = check.get(0);
-            assertEquals(checksStr, "2024-10-20" + " " + "22:50:00" + " " + "popit pivo");
-            boolean i = database.delTask(chat_id,"2024-10-20","22:50:00");
+            ArrayList<String> rightCheck = new ArrayList<String>();
+            rightCheck.add("1" + " " + "pupa" + " " +
+                    "24.10.2021" + " " + "22:50" + " " + "popit pivo");
+            rightCheck.add("1" + " " + "pupa" + " " +
+                    "25.12.2022" + " " + "10:30" + " " + "Poigrat v dotu");
+            assertEquals(check, rightCheck);
+        } catch (ClassNotFoundException | SQLException ex) {
+        }
+    }
+    @Test
+    void testRegistration(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Database database = new Database("root", "root", "");
+            String lname = "pupa";
+            String fname = "1";
+
+            ResultSet resultSet = Database.statement.executeQuery("SELECT * from users where firstname = '"+fname+"'");
+            String fnamecheck = resultSet.getString(2);
+            String lnamecheck = resultSet.getString(3);
+            //
+            //
+            assertEquals(fnamecheck, fname);
+            assertEquals(lnamecheck, lname);
         } catch (ClassNotFoundException | SQLException ex) {
         }
     }

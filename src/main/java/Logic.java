@@ -32,9 +32,9 @@ public class Logic {
                     switch (CommandOrText) {
                         case "Monday":
                             mc.setS("неделя");
-                            database.addTask( ChatId,"25.11.2021","22:53","сделай что то");
+                            System.out.println(ChatId);
+                            database.addTask( ChatId,"2021-11-26","22:53","сделай что-то");
                             System.out.println(database.checkTasks(ChatId));
-
                             System.out.println(mc.getS());
                             return string;
                         case "Tuesday":
