@@ -34,12 +34,12 @@ class Database {
       throw new RuntimeException();
     }
   }
-  
+
   boolean delTask(String chat_id, String date_task, String time_task) throws SQLException, ClassNotFoundException{
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
       statement.executeUpdate(
-          "Delete from tasks where chat_id = '"+chat_id+"', date_task = '"+date_task+"', time_task = '"+time_task+"'");
+              "Delete from tasks where chat_id = '"+chat_id+"', date_task = '"+date_task+"', time_task = '"+time_task+"'");
     } catch (Exception e){
       return false;
     }
@@ -51,8 +51,8 @@ class Database {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
       statement.executeUpdate(
-          "INSERT INTO tasks(name_id, date_task, time_task, task) value ('" + chat_id + "','"
-              + date_task + "', '" + time_task + "', '" + task + "')");
+              "INSERT INTO tasks(chat_id, date_task, time_task, task) value ('" + chat_id + "','"
+                      + date_task + "', '" + time_task + "', '" + task + "')");
     } catch (Exception e){
       return false;
     }
@@ -67,14 +67,12 @@ class Database {
       Class.forName("com.mysql.cj.jdbc.Driver");
 
       ResultSet resultSet = statement.executeQuery(
-          "SELECT * from tasks where chat_id = '" + chat_id + "'"); // return table tasks
+              "SELECT * from tasks where chat_id = '" + chat_id + "'"); // return table tasks
 
       while (resultSet.next()) {
-        result.add(resultSet.getString(1) + " " +
-            resultSet.getString(2) + " " +
-            resultSet.getString(3) + " " +
-            resultSet.getString(4) + " " +
-            resultSet.getString(5));
+        result.add(resultSet.getString(3) + " " +
+                resultSet.getString(4) + " " +
+                resultSet.getString(5));
       }
     } catch (Exception e){
       return null;
