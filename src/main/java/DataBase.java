@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.sql.*;
 
 class Database {
-  public static String USER_NAME = null;
-  public static String PASSWORD = null;
-  public static String URL = null;
+  public static String USER_NAME = getdatabase.getUserName();
+  public static String PASSWORD = getdatabase.getPassword();
+  public static String URL = getdatabase.getUrl();
   public static Statement statement;
   public static Connection connection;
 
