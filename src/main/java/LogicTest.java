@@ -45,7 +45,7 @@ class LogicTest {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
-            String chat_id = "57";
+            String chat_id = "75";
             database.addTask(chat_id, "2021-10-24", "22:50:00", "popit pivo");
             String date_task ="";
             String time_task ="";
@@ -77,13 +77,13 @@ class LogicTest {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
-            String chat_id = "54";
-            database.addTask(chat_id, "2024-10-20", "22:50:00", "popit pivo");
+            String chat_id = "89";
+            database.addTask(chat_id, "2024-10-25", "22:50:00", "popit pivo");
             ArrayList<String> check = database.checkTasks(chat_id);
             assertNotNull(check);
             String checksStr = check.get(0);
-            assertEquals(checksStr, "2024-10-20" + " " + "22:50:00" + " " + "popit pivo");
-            boolean i = database.delTask(chat_id,"2024-10-20","22:50:00");
+            assertEquals(checksStr, "2024-10-25" + " " + "22:50:00" + " " + "popit pivo");
+            boolean i = database.delTask(chat_id,"2024-10-25","22:50:00");
         } catch (ClassNotFoundException | SQLException ex) {
             assertTrue(1 == 2);
         }
