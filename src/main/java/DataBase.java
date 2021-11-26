@@ -39,7 +39,7 @@ class Database {
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
       statement.executeUpdate(
-              "Delete from tasks where chat_id = '"+chat_id+"', date_task = '"+date_task+"', time_task = '"+time_task+"'");
+              "Delete from tasks where chat_id = '"+chat_id+"' AND date_task = '"+date_task+"' AND time_task = '"+time_task+"'");
     } catch (Exception e){
       return false;
     }

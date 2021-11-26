@@ -85,6 +85,24 @@ class LogicTest {
             assertEquals(checksStr, "2024-10-20" + " " + "22:50:00" + " " + "popit pivo");
             boolean i = database.delTask(chat_id,"2024-10-20","22:50:00");
         } catch (ClassNotFoundException | SQLException ex) {
+            assertTrue(1 == 2);
+        }
+    }
+
+    @Test
+    void testDatabaseDelTask(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
+            String chat_id = "54";
+            String date_task = "2024-10-20";
+            String time_task = "22:50:00";
+            database.addTask(chat_id, date_task, time_task, "popit pivo");
+            ArrayList<String> check = database.checkTasks(chat_id);
+            assertNotNull(check);
+            assertTrue(database.delTask(chat_id, date_task, time_task));
+        } catch (ClassNotFoundException | SQLException ex) {
+            assertTrue(1 == 2);
         }
     }
 }
