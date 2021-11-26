@@ -39,7 +39,7 @@ class Database {
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
       statement.executeUpdate(
-              "Delete from tasks where chat_id = '"+chat_id+"', date_task = '"+date_task+"', time_task = '"+time_task+"'");
+              "Delete from tasks where chat_id = '"+chat_id+"' AND date_task = '"+date_task+"' AND time_task = '"+time_task+"'");
     } catch (Exception e){
       return false;
     }
@@ -48,6 +48,12 @@ class Database {
 
   boolean addTask(String chat_id, String date_task, String time_task, String task) throws SQLException, ClassNotFoundException {
     // Method created for add task to database
+
+
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      statement.executeUpdate("INSERT INTO tasks(chat_id, date_task, time_task, task) value ('"+chat_id+"', '"+date_task+"','"+time_task+"', '"+task+"')");
+
 
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
@@ -61,7 +67,7 @@ class Database {
     return true;
   }
 
-  ArrayList<String> checkTasks(String chat_id) throws ClassNotFoundException, SQLException {
+   ArrayList<String> checkTasks(String chat_id) throws ClassNotFoundException, SQLException {
     // Method use lastname only
     ArrayList<String> result = new ArrayList<String>(){};
     try {
