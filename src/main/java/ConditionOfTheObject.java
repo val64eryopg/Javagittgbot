@@ -1,5 +1,5 @@
 public enum ConditionOfTheObject {
-    COMMAND("1","3");
+    COMMAND("ТипКоманды","Значение");
 
     private String s;
     private String i;

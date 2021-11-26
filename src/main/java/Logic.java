@@ -1,10 +1,15 @@
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
+
 import java.util.Date;
 
 
 public class Logic {
+
+    public static ConditionOfTheObject mc;
+
+
     private static Database database = new Database("sql11453146", "lAMgQUpd9q",
             "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
 
@@ -18,13 +23,33 @@ public class Logic {
 
         if (!(CommandOrText.equals(""))&&!(ListOfButtons.equals(""))){
             ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
+            System.out.println(CommandOrText);
             switch (ListOfButtons){
                 case "выберете число этого месяца:":
                     switch (CommandOrText) {
+                        case "26":
+                            mc.setS("месяц");
+                            System.out.println("попал сюда");
+                            hoIAM("выберете число этого месяца:","26");
+                            break;
+                        case "28":
+                            break;
+
+                        case "27":
+                            break;
+
+                        case "29":
+                            break;
+
+                        case "30":
+                            break;
+
+
                         case "следущий месяц":
 
                             break;
                         default:
+                            System.out.println(CommandOrText);
                             return string;
                     }
 
@@ -32,22 +57,42 @@ public class Logic {
                     switch (CommandOrText) {
                         case "Monday":
                             mc.setS("неделя");
-                            System.out.println(ChatId);
-                            database.addTask( ChatId,"2021-11-26","22:53","сделай что-то");
+                            database.addTask(ChatId,"2021-11-26","22:53","сделай что то");
                             System.out.println(database.checkTasks(ChatId));
+                            mc.setS("неделя");
+                            mc.setI("time");
                             System.out.println(mc.getS());
                             return string;
                         case "Tuesday":
+                            hoIAM("выберете дату этой неделиЖ","Tuesday");
+                            mc.setS("неделя");
+                            mc.setI("time");
+                            System.out.println(mc.getS());
                             return string + "";
                         case "Wednesday":
+                            mc.setS("неделя");
+                            mc.setI("time");
+                            System.out.println(mc.getS());
                             return string;
                         case "Thursday":
+                            mc.setS("неделя");
+                            mc.setI("time");
+                            System.out.println(mc.getS());
                             return string;
                         case "Sunday":
+                            mc.setS("неделя");
+                            mc.setI("time");
+                            System.out.println(mc.getS());
                             return string;
                         case "Friday":
+                            mc.setS("неделя");
+                            mc.setI("time");
+                            System.out.println(mc.getS());
                             return "да ладно это тоже не очень день для дел " + string;
                         case "Saturday":
+                            mc.setS("неделя");
+                            mc.setI("time");
+                            System.out.println(mc.getS());
                             return string + "суббота";
 
                         default:
@@ -64,7 +109,20 @@ public class Logic {
     }
 
 
-    public Integer hoIAM(){return 1;}
+    public static void hoIAM(String init,String TimeOrData){
+        ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
+        System.out.println("а теперь сюда");
+        if (init == "выберете число этого месяца:"){
+            LocalDate today = LocalDate.now();
+            int month = today.getMonthValue();
+            int year = today.getYear();
+            mc.setI( year+"-" + month +  "-"+ TimeOrData  );
+            System.out.println(mc.getI());
+            System.out.println(init+" "+month);
+
+        }
+
+    }
 
 
 
@@ -76,5 +134,10 @@ public class Logic {
 
     public static Date getData() {
         return new Date();
+    }
+
+    public static void  Writing(String write,String v,String z, String f) throws SQLException, ClassNotFoundException {
+        database.addTask(write,v,z,f);
+        System.out.println(database.checkTasks(write));
     }
 }

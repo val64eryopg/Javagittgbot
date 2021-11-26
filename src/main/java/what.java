@@ -110,13 +110,16 @@ public class what extends TelegramLongPollingBot{
         }
         else {
             ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
-            if (message.hasText() && (mc.getS() != "close")) {
-                String messages = message.getText().toString();
+            if (message.hasText() && (mc.getS() != "ТипКоманды")&&(mc.getS() != "Значение")) {
+                String messages = message.getText();
                 execute(SendMessage.builder()
                         .text("Задача записанна " + messages + " " + mc.getS().toString())
                         .chatId(message.getChatId().toString())
                         .build());
-                mc.setS("Close");
+                String[] TimeAndDo = messages.split("-");
+                Logic.Writing(message.getChatId().toString(),mc.getS(),TimeAndDo[1],TimeAndDo[2]);
+                mc.setS("ТипКоманды");
+
                 System.out.println(mc.getS());
             }
         }
