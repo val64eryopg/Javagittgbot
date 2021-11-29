@@ -31,10 +31,17 @@ class LogicTest {
     }
 
     @Test
+    void testNamePassURL(){
+        assertNotNull(getdatabase.getUserName());
+        assertNotNull(getdatabase.getUrl());
+        assertNotNull(getdatabase.getPassword());
+    }
+
+    @Test
     void testDatabaseIsNotNull() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
+            Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
             assertNotNull(database);
         } catch (ClassNotFoundException ex) {
         }
@@ -44,13 +51,13 @@ class LogicTest {
     void testDatabaseAddTask() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
-            String chat_id = "75";
+            Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
+            String chat_id = "57";
             database.addTask(chat_id, "2021-10-24", "22:50:00", "popit pivo");
             String date_task ="";
             String time_task ="";
             String task ="";
-            try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146", "sql11453146", "lAMgQUpd9q")) {
+            try (Connection conn = DriverManager.getConnection(getdatabase.getUrl(), getdatabase.getUserName(), getdatabase.getPassword())) {
                 Statement statement = conn.createStatement();
                 ResultSet resultSet = statement.executeQuery(
                         "SELECT * from tasks where chat_id = '" + chat_id + "'");
@@ -76,14 +83,14 @@ class LogicTest {
     void testDatabaseCheckTasks() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
-            String chat_id = "89";
-            database.addTask(chat_id, "2024-10-25", "22:50:00", "popit pivo");
+            Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
+            String chat_id = "54";
+            database.addTask(chat_id, "2024-10-20", "22:50:00", "popit pivo");
             ArrayList<String> check = database.checkTasks(chat_id);
             assertNotNull(check);
             String checksStr = check.get(0);
-            assertEquals(checksStr, "2024-10-25" + " " + "22:50:00" + " " + "popit pivo");
-            boolean i = database.delTask(chat_id,"2024-10-25","22:50:00");
+            assertEquals(checksStr, "2024-10-20" + " " + "22:50:00" + " " + "popit pivo");
+            boolean i = database.delTask(chat_id,"2024-10-20","22:50:00");
         } catch (ClassNotFoundException | SQLException ex) {
             assertTrue(1 == 2);
         }
@@ -93,7 +100,7 @@ class LogicTest {
     void testDatabaseDelTask(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database("sql11453146", "lAMgQUpd9q", "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11453146");
+            Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
             String chat_id = "54";
             String date_task = "2024-10-20";
             String time_task = "22:50:00";
@@ -104,5 +111,54 @@ class LogicTest {
         } catch (ClassNotFoundException | SQLException ex) {
             assertTrue(1 == 2);
         }
+    }
+
+    @Test
+    void testSwitchMessage(){
+        String chatId = "100";
+        String command = "/RegistrationForA_Week";
+        ResultsCommand result = Logic.SwitchMessage(command,chatId);
+        assertNotNull(result);
+        assertNotNull(result.getFirst());
+        assertNotNull(result.getMyArray());
+        assertEquals(result.getFirst(), "выберете день недели");
+        assertEquals(result.getMyArray().length, 7);
+        //
+        command = "/RegistrationForA_Month";
+        result = Logic.SwitchMessage(command,chatId);
+        assertNotNull(result);
+        assertNotNull(result.getFirst());
+        assertNotNull(result.getMyArray());
+        assertEquals(result.getFirst(), "Выберете число этого месяца:");
+        //
+        command = "/LookAtWatch";
+        result = Logic.SwitchMessage(command,chatId);
+        assertNotNull(result);
+        assertNotNull(result.getFirst());
+        assertNotNull(result.getMyArray());
+        assertEquals(result.getFirst(), Logic.getData().toString());
+        assertEquals(result.getMyArray().length,1);
+        //
+        command = "/DeleteTask";
+        result = Logic.SwitchMessage(command,chatId);
+        assertNotNull(result);
+        assertNotNull(result.getFirst());
+        assertNotNull(result.getMyArray());
+        assertEquals(result.getFirst(), "Нажмите на то что хотите удалить:");
+        //
+        command = "/MyTask";
+        result = Logic.SwitchMessage(command,chatId);
+        assertNotNull(result);
+        assertNotNull(result.getFirst());
+        assertNotNull(result.getMyArray());
+        assertEquals(result.getFirst(), "Вот список ваших задач:");
+        //
+        command = "/Help";
+        result = Logic.SwitchMessage(command,chatId);
+        assertNotNull(result);
+        assertNotNull(result.getFirst());
+        assertNotNull(result.getMyArray());
+        assertEquals(result.getFirst(), "Список доступных команд: \n/DeleteTask \n/MyTask \n/LookAtWatch \n/RegistrationForA_Month \n/RegistrationForA_Week");
+        assertEquals(result.getMyArray().length,0);
     }
 }
