@@ -64,8 +64,6 @@ class LogicTest {
                     time_task = resultSet.getString(4);
                     task = resultSet.getString(5);
                     boolean i = database.delTask(chat_id,"2021-10-24","22:50:00");
-                    /////
-                    /////
                 }
             }
             assertEquals(date_task, "2021-10-24");
