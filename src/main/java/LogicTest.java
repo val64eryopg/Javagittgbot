@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LogicTest {
 
+    private static final Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
+
     @org.junit.jupiter.api.Test
     void getTime() {
         Date date = new Date(68400000L);
@@ -37,7 +39,6 @@ class LogicTest {
         assertNotNull(getdatabase.getPassword());
     }
 
-    Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
 
     @Test
     void testDatabaseIsNotNull() {
@@ -48,7 +49,6 @@ class LogicTest {
     void testDatabaseAddTask() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
             String chat_id = "474174177";
             database.addTask(chat_id, "2021-10-24", "22:50:00", "popit pivo");
             String date_task ="";
@@ -80,7 +80,6 @@ class LogicTest {
     void testDatabaseCheckTasks() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
             String chat_id = "99";
             database.addTask(chat_id, "2024-10-20", "22:50:00", "popit pivo");
             ArrayList<String> check = database.checkTasks(chat_id);
@@ -97,7 +96,6 @@ class LogicTest {
     void testDatabaseDelTask(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
             String chat_id = "54";
             String date_task = "2024-10-20";
             String time_task = "22:50:00";
