@@ -1,3 +1,5 @@
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -12,8 +14,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import java.util.Calendar;
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class what extends TelegramLongPollingBot{
@@ -22,6 +24,7 @@ public class what extends TelegramLongPollingBot{
     @Override
     @SneakyThrows
     public void onUpdateReceived(Update update) {
+//        GetPage();
         if (update.hasCallbackQuery()) {
             handleCallback(update.getCallbackQuery());
         } else
@@ -35,7 +38,12 @@ public class what extends TelegramLongPollingBot{
         Message message = callbackQuery.getMessage();
         System.out.println(message.getText());
         Logic.getCommand(callbackQuery.getData(), message.getText(),message.getChatId().toString());
-        execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите итересующие вас время и задачу в формате: 66:66-раскрасить открытку").build());
+        if (!(message.getText().equals("Вот список ваших задач:"))&&!(message.getText().equals("Нажмите на то что хотите удалить:"))) {
+            execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите итересующие вас время и задачу в формате\n 66:66-раскрасить открытку").build());
+        }
+        if(message.getText().equals("Нажмите на то что хотите удалить:")){execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
+                "задача успешно удалена"
+        ).build());}
     }
 
 
@@ -120,23 +128,33 @@ public class what extends TelegramLongPollingBot{
         else {
             ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
             if (message.hasText() && (mc.getS() != "ТипКоманды")&&(mc.getS() != "Значение")) {
-                Date date = new Date();
+                String regex = "\\d{1,2}:\\d{2}-.+";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(message.getText());
+                if(matcher.matches()) {
+                    Date date = new Date();
+                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+                    cal.setTime(date);
+                    int year = cal.get(Calendar.YEAR);
+                    int month = cal.get(Calendar.MONTH);
+                    String resolt = year + "-" + month + "-" + mc.getI();
+                    String messages = message.getText();
+                    execute(SendMessage.builder()
+                            .text("Задача записана: " + messages)
+                            .chatId(message.getChatId().toString())
+                            .build());
+                    String[] TimeAndDo = messages.split("-");
+                    Logic.Writing(message.getChatId().toString(), resolt, TimeAndDo[0], TimeAndDo[1]);
+                    mc.setS("ТипКоманды");
+                    mc.setI("Значение");
+                }else{
+                    execute(SendMessage.builder()
+                            .text("усп что то не то ввели ведите заново или отменитет \n/otmena")
+                            .chatId(message.getChatId().toString())
+                            .build());
 
-                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-                cal.setTime(date);
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                String resolt = year +"-" +month +"-"+mc.getI();
-                String messages = message.getText();
-                execute(SendMessage.builder()
-                        .text("Задача записана: " + messages + " " + mc.getS().toString())
-                        .chatId(message.getChatId().toString())
-                        .build());
-                // 12:20-sdjflsdjflsdlfsdlfhn
-                String[] TimeAndDo = messages.split("-");
-                Logic.Writing(message.getChatId().toString(),resolt,TimeAndDo[0],TimeAndDo[1]);
-                mc.setS("ТипКоманды");
-                mc.setI("Значение");
+                }
+
             } else
                 execute(SendMessage.builder()
                         .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
@@ -156,7 +174,6 @@ public class what extends TelegramLongPollingBot{
         }
         System.out.println("теперь я в методе SendToUser вот его ввод:"+str);
         if (!(str.equals("не то"))){
-            System.out.println("ахуеть попал");
             execute(SendMessage.builder()
                     .text(TextAndList.getFirst())
                     .chatId(chatId)
@@ -172,6 +189,31 @@ public class what extends TelegramLongPollingBot{
                     .build());
         }
 
+    }
+    @SneakyThrows
+    public static void GetPage(){
+        String content = null;
+        URLConnection connection = null;
+        try {
+            connection =  new URL("https://dateandtime.info/ru/index.php#").openConnection();
+            Scanner scanner = new Scanner(connection.getInputStream());
+            scanner.useDelimiter("\\Z");
+            content = scanner.next();
+            scanner.close();
+        }catch ( Exception ex ) {
+            ex.printStackTrace();
+        }
+        System.out.println(content);
+        ParseCity("",content);
+    }
+    public static void ParseCity(String in,String text){
+
+        String regex = "Перу\\S+\\n\\S+ \\S+ \\S+ \\S{5}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        System.out.println("вывод" +" : ");
+        System.out.println("вывод" +" : "+ matcher.matches());
+        System.out.println("проделолось");
     }
 
 

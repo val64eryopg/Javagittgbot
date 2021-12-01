@@ -1,11 +1,13 @@
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import lombok.SneakyThrows;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
-
+import java.net.URL;
 
 public class Logic {
 
@@ -14,6 +16,7 @@ public class Logic {
 
   public static void getCommand(String CommandOrText, String ListOfButtons, String chatId)
       throws SQLException, ClassNotFoundException {
+      System.out.println("здесь");
     String string = "Введите итересующие вас время и задачу в формате\n 66:66-раскрасить открытку";
 
     if (!(CommandOrText.equals("")) && !(ListOfButtons.equals(""))) {
@@ -31,9 +34,10 @@ public class Logic {
 
           break;
         case "Нажмите на то что хотите удалить:":
-          String[] words = CommandOrText.split(" ");
-          database.delTask(words[0], words[1], words[2]);
-          break;
+            String[] words = CommandOrText.split(" ");
+            System.out.println(words[0]+words[1]+words[2]);
+            database.delTask(chatId,words[0],words[1]);
+            break;
         default:
           System.out.println("не попал");
 
@@ -142,8 +146,16 @@ public class Logic {
         result.setMyArray(array);
         System.out.println(result.getFirst());
         return result;
-      case "/f":
-        break;
+      case "/start":
+          ArrayList<String> Buttons44 = new ArrayList<String>();
+          result.SetResult(
+                  "Доброго времени, суток наш бот записывает и отображает ваши задачи\n Вот список доступных команд такой: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
+          String[] array55= new String[Buttons44.size()];
+          for (int i = 0; i < Buttons44.size(); i++) {
+              array55[i] = Buttons44.get(i);
+          }
+          result.setMyArray(array55);
+          return result;
       case "/LookAtWatch":
 
         ArrayList<String> Buttons3 = new ArrayList<String>();
@@ -155,43 +167,50 @@ public class Logic {
         }
         result.setMyArray(array11);
         return result;
-      case "/DeleteTask":
-        result.SetResult("Нажмите на то что хотите удалить:");
-        try {
-          Class.forName("com.mysql.cj.jdbc.Driver");
-          ArrayList<String> check = database.checkTasks(chatId);
-          String[] array111 = new String[check.size()];
-          for (int i = 0; i < check.size(); i++) {
-            array111[i] = check.get(i);
-          }
-          result.setMyArray(array111);
-          return result;
-        } catch (ClassNotFoundException | SQLException ex) {
-        }
-        break;
-      case "/MyTask":
-        result.SetResult("Вот список ваших задач:");
-        try {
-          ArrayList<String> check = database.checkTasks(chatId);
-          if (check.size() != 0) {
-            String[] array111 = new String[check.size()];
-            for (int i = 0; i < check.size(); i++) {
-              array111[i] = check.get(i);
+        case "/otmena":
+            ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
+            mc.setS("ТипКоманды");
+            mc.setI("Значение");
+            break;
+        case "/DeleteTask":
+            result.SetResult("Нажмите на то что хотите удалить:");
+            try {
+                ArrayList<String> check = database.checkTasks(chatId);
+                if (check.size() != 0){
+                    String[] array111 = new String[check.size()];
+                    for(int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                    result.setMyArray(array111);
+                    return result;
+                } else
+                {
+                    check.add("нет данных");
+                    String[] array111 = new String[check.size()];
+                    for(int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                    result.setMyArray(array111);
+                    return result;
+
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
             }
-            result.setMyArray(array111);
-          } else {
-            check.add("нет данных");
-            String[] array111 = new String[check.size()];
-            for (int i = 0; i < check.size(); i++) {
-              array111[i] = check.get(i);
+            break;
+        case "/MyTask":
+            result.SetResult("Вот список ваших задач:");
+            try {
+                ArrayList<String> check = database.checkTasks(chatId);
+                if (check.size() != 0){ String[] array111 = new String[check.size()];
+                    for(int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                    result.setMyArray(array111);}
+                else{
+                    check.add("нет данных");
+                    String[] array111 = new String[check.size()];
+                    for(int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                    result.setMyArray(array111);
+                    return result;
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                ex.printStackTrace();
             }
-            result.setMyArray(array111);
-            return result;
-          }
-        } catch (ClassNotFoundException | SQLException ex) {
-          ex.printStackTrace();
-        }
-        break;
+            break;
       case "/HELP":
         ArrayList<String> Buttons4 = new ArrayList<String>();
         String strHelp = "";
