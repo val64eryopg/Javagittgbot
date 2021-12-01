@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.*;
@@ -24,7 +26,7 @@ public class what extends TelegramLongPollingBot{
     @Override
     @SneakyThrows
     public void onUpdateReceived(Update update) {
-//        GetPage();
+        GetPage();
         if (update.hasCallbackQuery()) {
             handleCallback(update.getCallbackQuery());
         } else
@@ -149,7 +151,7 @@ public class what extends TelegramLongPollingBot{
                     mc.setI("Значение");
                 }else{
                     execute(SendMessage.builder()
-                            .text("усп что то не то ввели ведите заново или отменитет \n/otmena")
+                            .text("усп что то не то ввели ведите заново или отмените \n/otmena")
                             .chatId(message.getChatId().toString())
                             .build());
 
@@ -192,28 +194,47 @@ public class what extends TelegramLongPollingBot{
     }
     @SneakyThrows
     public static void GetPage(){
-        String content = null;
-        URLConnection connection = null;
-        try {
-            connection =  new URL("https://dateandtime.info/ru/index.php#").openConnection();
-            Scanner scanner = new Scanner(connection.getInputStream());
-            scanner.useDelimiter("\\Z");
-            content = scanner.next();
-            scanner.close();
-        }catch ( Exception ex ) {
-            ex.printStackTrace();
-        }
-        System.out.println(content);
-        ParseCity("",content);
+//        String content = null;
+//        URLConnection connection = null;
+//        try {
+//            connection =  new URL("https://dateandtime.info/ru/index.php#").openConnection();
+//            Scanner scanner = new Scanner(connection.getInputStream());
+//            scanner.useDelimiter("\\Z");
+//            content = scanner.next();
+//            scanner.close();
+//        }catch ( Exception ex ) {
+//            ex.printStackTrace();
+//        }
+        URL oracle = new URL("https://dateandtime.info/ru/index.php#" );
+        BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+        ParseCity(in);
     }
-    public static void ParseCity(String in,String text){
-
-        String regex = "Перу\\S+\\n\\S+ \\S+ \\S+ \\S{5}";
+    public static Matcher getMatcher(String regex, String line){
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(text);
-        System.out.println("вывод" +" : ");
-        System.out.println("вывод" +" : "+ matcher.matches());
-        System.out.println("проделолось");
+        return pattern.matcher(line);
+    }
+
+    @SneakyThrows
+    public static void ParseCity(BufferedReader in){
+
+//        String regex = "Луксор</a>, <a \\S+</a></td><td>\\n\\S+ \\S+ \\S+ \\S{5}";
+//        Pattern pattern = Pattern.compile(regex);
+//        Matcher matcher = pattern.matcher(text);
+//        System.out.println("вывод" +" : ");
+//        System.out.println("вывод" +" : "+ matcher.group(1));
+//        System.out.println("проделолось");
+        System.out.println("тут");
+        StringBuilder result = new StringBuilder();
+        String regexCinema = "\\S+\\n\\S+ \\S+ \\S+ \\S{5}";
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            Matcher matcherDate = getMatcher(regexCinema, inputLine);
+            if (matcherDate.find()) {
+                    result.append("ближайшие сеансы есть ").append(matcherDate.group(1)).append(" в этих кинотеатрах:");
+            }
+        }
+        System.out.println("то");
+        System.out.println(result);
     }
 
 
