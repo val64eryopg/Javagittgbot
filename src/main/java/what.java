@@ -26,7 +26,7 @@ public class what extends TelegramLongPollingBot{
     @Override
     @SneakyThrows
     public void onUpdateReceived(Update update) {
-        GetPage();
+        Multithreading.chat = update.getMessage().getChatId().toString();
         if (update.hasCallbackQuery()) {
             handleCallback(update.getCallbackQuery());
         } else
@@ -265,6 +265,8 @@ public class what extends TelegramLongPollingBot{
         what bot = new what();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
+        Multithreading newThread = new Multithreading();
+        newThread.start();
     }
 
 }
