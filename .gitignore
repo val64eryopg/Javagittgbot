@@ -7,8 +7,6 @@
 **.iml
 **.xml
 !pom.xml
-**gettoken.java
-**getdatabase.java
 
 
 # BlueJ files

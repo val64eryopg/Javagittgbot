@@ -29,7 +29,7 @@ class LogicTest {
 
     @Test
     void getToken() {
-        assertNotNull(gettoken.getbottoken());
+        assertNotNull(getToken.getBotToken());
     }
 
     @Test
