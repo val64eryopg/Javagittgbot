@@ -7,10 +7,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Multithreading extends Thread {
-    public static String chat = "";
     private static Database database = new Database(getdatabase.getUserName(),
             getdatabase.getPassword(), getdatabase.getUrl());
-
+    private what bot;
     public void run(){
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.YEAR, 2017);
@@ -21,8 +20,13 @@ public class Multithreading extends Thread {
         calendar.set(Calendar.SECOND, 12);
         System.out.println(calendar.getTime());
         while(true){
-            DateComparison(chat);
+            DateComparison("f");
+
         }
+    }
+
+    Multithreading(what bot){
+        this.bot = bot;
     }
 
     @SneakyThrows

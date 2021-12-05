@@ -264,7 +264,7 @@ public class what extends TelegramLongPollingBot{
         what bot = new what();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
-        Multithreading newThread = new Multithreading();
+        Multithreading newThread = new Multithreading(bot);
         newThread.start();
     }
 
