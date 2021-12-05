@@ -1,3 +1,4 @@
+import java.net.MalformedURLException;
 import lombok.SneakyThrows;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -177,16 +178,7 @@ public class Logic {
             ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
             mc.setS("ТипКоманды");
             mc.setI("Значение");
-
-            ArrayList<String> Buttons46 = new ArrayList<String>();
-            result.SetResult("Задача отменена");
-            Buttons46.add("не то");
-            String[] array1111 = new String[Buttons46.size()];
-            for (int i = 0; i < Buttons46.size(); i++) {
-                array1111[i] = Buttons46.get(i);
-            }
-            result.setMyArray(array1111);
-            return result;
+            break;
         case "/DeleteTask":
             result.SetResult("Нажмите на то что хотите удалить:");
             try {
@@ -248,9 +240,9 @@ public class Logic {
   }
 
 
-  public static String getTime(Date date) {
-    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-    return timeFormat.format(date);
+  public static String getTime(Date date) throws MalformedURLException {
+    //URL oracle = new URL("https://dateandtime.info/ru/index.php#");
+    return null;
   }
 
   public static Date getData() {
