@@ -149,7 +149,13 @@ public class Logic {
       case "/start":
           ArrayList<String> Buttons44 = new ArrayList<String>();
           result.SetResult(
-                  "Доброго времени, суток наш бот записывает и отображает ваши задачи\n Вот список доступных команд такой: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
+                  "Доброго времени, суток наш бот записывает и отображает ваши задачи" +
+                          "\n Вот список доступных команд такой: " +
+                          "\n /DeleteTask " +
+                          "\n /MyTask " +
+                          "\n /LookAtWatch " +
+                          "\n /RegistrationForA_Month " +
+                          "\n /RegistrationForA_Week");
           String[] array55= new String[Buttons44.size()];
           for (int i = 0; i < Buttons44.size(); i++) {
               array55[i] = Buttons44.get(i);
