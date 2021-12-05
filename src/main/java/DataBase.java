@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.sql.*;
 
 class Database {
-
   public static String USER_NAME = getdatabase.getUserName();
   public static String PASSWORD = getdatabase.getPassword();
   public static String URL = getdatabase.getUrl();
@@ -78,5 +77,61 @@ class Database {
       return null;
     }
     return result;
+  }
+
+  ArrayList<String> returnTasks(){
+    ArrayList<String> result = new ArrayList<String>(){};
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+
+      ResultSet resultSet = statement.executeQuery(
+          "SELECT * from tasks"); // return table tasks
+
+      while (resultSet.next()) {
+
+        result.add(resultSet.getString(2) + " " +
+            resultSet.getString(3) + " " +
+            resultSet.getString(4) + " " +
+            resultSet.getString(5));
+      }
+
+    } catch (Exception e){
+      return new ArrayList<String>();
+    }
+    return result;
+  }
+
+  boolean addUserCondtion(String username, String condtion){
+    try{
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      statement.executeUpdate("INSERT INTO users(username, cond) value( '" + username + "',  '" + condtion + "'");
+    } catch (Exception e){
+      return false;
+    }
+    return true;
+  }
+
+  boolean checkUserCodtion(String username){
+    try{
+
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      ResultSet resultSet = statement.executeQuery("SELECT * from users where username = '"+ username +"'");
+      while (resultSet.next()) {
+        System.out.println(resultSet.getString(2));
+      }
+    } catch (Exception e){
+      return false;
+    }
+    return true;
+  }
+
+  boolean delUserCondtion(String username){
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      statement.executeUpdate("Delete from tasks where chat_id = '"+username+"'");
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
   }
 }
