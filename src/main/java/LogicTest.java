@@ -10,7 +10,22 @@ class LogicTest {
 
     private static final Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
 
+//    @org.junit.jupiter.api.Test
+//    void getTime() {
+//        Date date = new Date(68400000L);
+//        String[] a = Logic.getTime(date).split(":");
+//        assertTrue(Integer.parseInt(a[0]) < Math.abs(24));
+//        assertTrue(Integer.parseInt(a[1]) < Math.abs(60));
+//        String[] b = Logic.getTime(Logic.getData()).split(":");
+//        assertTrue(Integer.parseInt(b[0]) < Math.abs(24));
+//        assertTrue(Integer.parseInt(b[1]) < Math.abs(60));
+//        assertNotNull(Logic.getTime(Logic.getData()));
+//    }
 
+    @org.junit.jupiter.api.Test
+    void getData() {
+        assertNotNull(Logic.getData());
+    }
 
     @Test
     void getToken() {
@@ -27,7 +42,7 @@ class LogicTest {
 
     @Test
     void testDatabaseIsNotNull() {
-            assertNotNull(database);
+        assertNotNull(database);
     }
 
     @Test
@@ -91,52 +106,103 @@ class LogicTest {
         }
     }
 
+    String chatId = "100";
+    String command = "/RegistrationForA_Week";
+    ResultsCommand result;
+
     @Test
-    void testSwitchMessage(){
-        String chatId = "100";
-        String command = "/RegistrationForA_Week";
-        ResultsCommand result = Logic.SwitchMessage(command,chatId);
+    void testSwitchMessageRegistrationForA_Week() {
+        ResultsCommand result = Logic.SwitchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
         assertEquals(result.getFirst(), "выберете день недели");
         assertEquals(result.getMyArray().length, 7);
-        //
+    }
+    @Test
+    void testSwitchMessageRegistrationForA_Month() {
         command = "/RegistrationForA_Month";
-        result = Logic.SwitchMessage(command,chatId);
+        result = Logic.SwitchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
         assertEquals(result.getFirst(), "Выберете число этого месяца:");
         //
+    }
+    @Test
+    void testSwitchMessageLookAtWatch() {
         command = "/LookAtWatch";
-        result = Logic.SwitchMessage(command,chatId);
+        result = Logic.SwitchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
-//        assertEquals(result.getFirst(), Logic.getData().toString());
-        assertEquals(result.getMyArray().length,1);
+        assertEquals(result.getFirst(), Logic.getData().toString());
+        assertEquals(result.getMyArray().length, 1);
         //
+    }
+    @Test
+    void testSwitchMessageDeleteTask() {
         command = "/DeleteTask";
-        result = Logic.SwitchMessage(command,chatId);
+        result = Logic.SwitchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
         assertEquals(result.getFirst(), "Нажмите на то что хотите удалить:");
         //
+    }
+    @Test
+    void testSwitchMyTask() {
         command = "/MyTask";
-        result = Logic.SwitchMessage(command,chatId);
+        result = Logic.SwitchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
         assertEquals(result.getFirst(), "Вот список ваших задач:");
         //
-        command = "/Help";
+    }
+    @Test
+    void testSwitchHelp() {
+        command = "/HELP";
         result = Logic.SwitchMessage(command,chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
-        assertNotNull(result.getMyArray());
-        assertEquals(result.getFirst(), "Список доступных команд: \n/DeleteTask \n/MyTask \n/LookAtWatch \n/RegistrationForA_Month \n/RegistrationForA_Week");
-        assertEquals(result.getMyArray().length,0);
+        assertEquals(result.getFirst(), "Cписок доступных команд: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
+        // assertEquals(result.getMyArray().length,0);
     }
+
+    //   @Test
+    //   void testEqualityDates(){
+    //       Date dateNow = new Date();
+    //       String dateFromDatabase = "2021-12-07 02:48:00 sdfefsef";
+    //       String[] dateArray = Logic.dateFormat(dateNow).split(" ");
+    //       String[] dateFromDatabaseArray = dateFromDatabase.split(" ");
+    //       boolean YearMonthDay = dateArray[0].equals(dateFromDatabaseArray[0]);
+    //       String a = dateArray[1];
+    //       String b = dateFromDatabaseArray[1];
+    //       boolean HourMin = dateArray[1].regionMatches(0,dateFromDatabaseArray[1],0,dateFromDatabaseArray[1].length() -3);
+    //   }
+
+    @Test
+    void testEqualDatesNowAndFromDatabase() throws SQLException, ClassNotFoundException {
+        String chat_id = "55";
+        String date_task = "2021-12-07";
+        String time_task = "02:50:00";
+        database.addTask(chat_id, date_task, time_task, "popit pivo");
+        ArrayList<String> check = database.checkTasks(chat_id);
+        String checksStr = check.get(0);
+        assertTrue(Logic.equalityDates(Logic.getData(),checksStr));
+        //assertEquals(checksStr, "2021-12-07" + " " + "02:40:00" + " " + "popit pivo");
+        database.delTask(chat_id,date_task,time_task);
+    }
+
+    @Test
+    void testUserCondition(){
+        String username = "pupa";
+        String condition = "4444";
+        assertTrue(database.addUserCondtion(username,condition));
+        assertTrue(database.checkUserCodtion(username));
+        assertNotNull(database.checkUserCodtionf(username));
+        database.delUserCondtion(username);
+    }
+
 }

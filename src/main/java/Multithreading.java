@@ -1,4 +1,6 @@
 import lombok.SneakyThrows;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -6,7 +8,13 @@ public class Multithreading extends Thread {
     private static Database database = new Database(getdatabase.getUserName(),
             getdatabase.getPassword(), getdatabase.getUrl());
     private what bot;
-    public void run(){
+
+    Multithreading(what bot) {
+        this.bot = bot;
+    }
+
+    @SneakyThrows
+    public void run() {
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.YEAR, 2017);
         calendar.set(Calendar.MONTH, 0);
@@ -15,24 +23,29 @@ public class Multithreading extends Thread {
         calendar.set(Calendar.MINUTE, 42);
         calendar.set(Calendar.SECOND, 12);
 //        System.out.println(calendar.getTime());
-        while(true){
-            DateComparison("f");
+        while (true) {
+            for (String s : database.returnTasks()) {
+                if (Logic.equalityDates(Logic.getData(), s)) {
+                    String chatId = s.split(" ")[0];
+                    String task = s.split(" ")[3];
+                    bot.execute(
+                            SendMessage.builder()
+                                    .text(task + "Прошел срок выполнения вашей задачи")
+                                    .chatId(chatId)
+                                    .build());
 
-        }
+                }
 //        bot.execute(
 //        SendMessage.builder()
 //                .text()
 //                .chatId()
 //                .build());
-    }
+            }
+        }
 
 
-    Multithreading(what bot){
-        this.bot = bot;
-    }
-
-    @SneakyThrows
-    public void DateComparison(String chat){
+//    @SneakyThrows
+//    public void DateComparison(String chat){
 //        ArrayList<String> check = database.checkTasks(chat);
 //        if (check.size() != 0) {
 //            String[] array23 = new String[check.size()];

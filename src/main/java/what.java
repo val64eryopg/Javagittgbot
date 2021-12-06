@@ -70,7 +70,7 @@ public class what extends TelegramLongPollingBot{
                 String[] zz = Logic.database.checkUserCodtionf(message.getChatId().toString()).get(1).split("%");
                 if (zz[1].equals("выбираем город") && message.hasText()) {
                     execute(SendMessage.builder()
-                            .text(test.GetPage(message.getText()))
+                            .text(Logic.getTimeFromPage(message.getText()))
                             .chatId(message.getChatId().toString())
                             .build());
                     Logic.database.delUserCondtion(message.getChatId().toString());
