@@ -111,18 +111,19 @@ class Database {
     return true;
   }
 
-  boolean checkUserCodtion(String username){
+  ArrayList<String> checkUserCodtion(String username){
+    ArrayList<String> result = new ArrayList<String>(){};
     try{
-
       Class.forName("com.mysql.cj.jdbc.Driver");
       ResultSet resultSet = statement.executeQuery("SELECT * from users where username = '"+ username +"'");
       while (resultSet.next()) {
-        System.out.println(resultSet.getString(2));
+        result.add(resultSet.getString(2) + " "
+            + resultSet.getString(3));
       }
     } catch (Exception e){
-      return false;
+      return new ArrayList<String>();
     }
-    return true;
+    return result;
   }
 
   boolean delUserCondtion(String username){
