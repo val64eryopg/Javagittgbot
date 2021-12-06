@@ -12,7 +12,7 @@ import java.net.URL;
 
 public class Logic {
 
-  private static Database database = new Database(getdatabase.getUserName(),
+  public static Database database = new Database(getdatabase.getUserName(),
       getdatabase.getPassword(), getdatabase.getUrl());
 
   public static void getCommand(String CommandOrText, String ListOfButtons, String chatId)
@@ -150,7 +150,13 @@ public class Logic {
       case "/start":
           ArrayList<String> Buttons44 = new ArrayList<String>();
           result.SetResult(
-                  "Доброго времени, суток наш бот записывает и отображает ваши задачи\n Вот список доступных команд такой: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
+                  "Доброго времени, суток наш бот записывает и отображает ваши задачи" +
+                          "\n Вот список доступных команд такой: " +
+                          "\n /DeleteTask " +
+                          "\n /MyTask " +
+                          "\n /LookAtWatch " +
+                          "\n /RegistrationForA_Month " +
+                          "\n /RegistrationForA_Week");
           String[] array55= new String[Buttons44.size()];
           for (int i = 0; i < Buttons44.size(); i++) {
               array55[i] = Buttons44.get(i);
@@ -172,7 +178,15 @@ public class Logic {
             ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
             mc.setS("ТипКоманды");
             mc.setI("Значение");
-            break;
+            ArrayList<String> Buttons46 = new ArrayList<String>();
+            result.SetResult("Задача отменена");
+            Buttons46.add("не то");
+            String[] array1111 = new String[Buttons46.size()];
+            for (int i = 0; i < Buttons46.size(); i++) {
+                array1111[i] = Buttons46.get(i);
+            }
+            result.setMyArray(array1111);
+            return result;
         case "/DeleteTask":
             result.SetResult("Нажмите на то что хотите удалить:");
             try {
@@ -234,10 +248,10 @@ public class Logic {
   }
 
 
-  public static String getTime(Date date) throws MalformedURLException {
-    //URL oracle = new URL("https://dateandtime.info/ru/index.php#");
-    return null;
-  }
+//  public static String getTime(Date date) throws MalformedURLException {
+//    //URL oracle = new URL("https://dateandtime.info/ru/index.php#");
+//    return null;
+//  }
 
   public static Date getData() {
     return new Date();

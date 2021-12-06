@@ -162,6 +162,10 @@ public class what extends TelegramLongPollingBot{
         }
     }
 
+    public static void Exeptions(){
+
+    }
+
 
 
     @SneakyThrows
@@ -206,6 +210,8 @@ public class what extends TelegramLongPollingBot{
         BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
         ParseCity(in);
     }
+
+
     public static Matcher getMatcher(String regex, String line){
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(line);
@@ -262,7 +268,7 @@ public class what extends TelegramLongPollingBot{
         what bot = new what();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
-        Multithreading newThread = new Multithreading();
+        Multithreading newThread = new Multithreading(bot);
         newThread.start();
     }
 
