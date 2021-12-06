@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.sql.*;
 
+
 class Database {
+
   public static String USER_NAME = getdatabase.getUserName();
   public static String PASSWORD = getdatabase.getPassword();
   public static String URL = getdatabase.getUrl();
@@ -22,7 +24,8 @@ class Database {
       // creation variable "connection", "statement"
       connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
     } catch (SQLException throwables){
-      throwables.printStackTrace();
+      System.out.println("ошибка sql");
+//      throwables.printStackTrace();
       throw new RuntimeException();
     }
   }
