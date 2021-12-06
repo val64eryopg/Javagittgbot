@@ -1,10 +1,4 @@
 import lombok.SneakyThrows;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 

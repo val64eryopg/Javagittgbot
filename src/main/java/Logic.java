@@ -145,6 +145,8 @@ public class Logic {
         }
         ConditionOfTheObject mc1 = ConditionOfTheObject.COMMAND;
         mc1.setI("выбираем город");
+          database.addUserCondtion(chatId, "/LookAtWatch%выбираем город");
+
         result.setMyArray(array11);
         return result;
         case "/otmena":
