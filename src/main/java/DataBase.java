@@ -104,11 +104,13 @@ class Database {
     return result;
   }
 
+
   boolean addUserCondtion(String username, String condtion){
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
-      statement.executeUpdate("INSERT INTO users(username, cond) value( '" + username + "',  '" + condtion + "'");
+      statement.executeUpdate("INSERT INTO users(username, cond) value ('"+username+"', '"+condtion+"')");
     } catch (Exception e){
+      System.out.println(e);
       return false;
     }
     return true;
@@ -118,7 +120,7 @@ class Database {
     ArrayList<String> result = new ArrayList<String>(){};
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
-      ResultSet resultSet = statement.executeQuery("SELECT * from users where username = '"+ username +"'");
+      ResultSet resultSet = statement.executeQuery("SELECT * from users where username = '"+username+"'");
       while (resultSet.next()) {
         result.add(resultSet.getString(2) + " "
             + resultSet.getString(3));
@@ -132,7 +134,7 @@ class Database {
   boolean delUserCondtion(String username){
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
-      statement.executeUpdate("Delete from tasks where chat_id = '"+username+"'");
+      statement.executeUpdate("Delete from users where username = '"+username+"'");
     } catch (Exception e) {
       return false;
     }
