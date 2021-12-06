@@ -101,6 +101,7 @@ class Database {
     return result;
   }
 
+
   boolean addUserCondtion(String username, String condtion){
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
