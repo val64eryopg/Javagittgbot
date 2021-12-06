@@ -1,17 +1,17 @@
 import lombok.SneakyThrows;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import javax.xml.crypto.Data;
-import java.text.DateFormat;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Multithreading extends Thread {
-
+    private static Database database = new Database(getdatabase.getUserName(),
+            getdatabase.getPassword(), getdatabase.getUrl());
     private what bot;
-
     public void run(){
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.YEAR, 2017);
@@ -20,34 +20,20 @@ public class Multithreading extends Thread {
         calendar.set(Calendar.HOUR_OF_DAY, 19);
         calendar.set(Calendar.MINUTE, 42);
         calendar.set(Calendar.SECOND, 12);
-        System.out.println(calendar.getTime());
-        String str = "";
-        try {
-            ArrayList<String> result = Logic.database.returnTasks();
-                for (String i : result) {
-//                    DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//                    Date d = sdf.parse(i);
-//                    System.out.println(d);
-                    String[] array = i.split(" |:");
-                    for(String b : array){
-                        str+=b;
-                    System.out.println(b);}
-
-
-                    System.out.println(i);
-                }
-        }catch (Throwable e){
-            str = "не получилось";
-            System.out.println(str);
-        }
-
+//        System.out.println(calendar.getTime());
         while(true){
             DateComparison("f");
 
         }
+//        bot.execute(
+//        SendMessage.builder()
+//                .text()
+//                .chatId()
+//                .build());
     }
 
-    Multithreading(what bot) {
+
+    Multithreading(what bot){
         this.bot = bot;
     }
 

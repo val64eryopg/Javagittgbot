@@ -10,22 +10,7 @@ class LogicTest {
 
     private static final Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
 
-//    @org.junit.jupiter.api.Test
-//    void getTime() {
-//        Date date = new Date(68400000L);
-//        String[] a = Logic.getTime(date).split(":");
-//        assertTrue(Integer.parseInt(a[0]) < Math.abs(24));
-//        assertTrue(Integer.parseInt(a[1]) < Math.abs(60));
-//        String[] b = Logic.getTime(Logic.getData()).split(":");
-//        assertTrue(Integer.parseInt(b[0]) < Math.abs(24));
-//        assertTrue(Integer.parseInt(b[1]) < Math.abs(60));
-//        assertNotNull(Logic.getTime(Logic.getData()));
-//    }
 
-    @org.junit.jupiter.api.Test
-    void getData() {
-        assertNotNull(Logic.getData());
-    }
 
     @Test
     void getToken() {
@@ -129,7 +114,7 @@ class LogicTest {
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
-        assertEquals(result.getFirst(), Logic.getData().toString());
+//        assertEquals(result.getFirst(), Logic.getData().toString());
         assertEquals(result.getMyArray().length,1);
         //
         command = "/DeleteTask";
