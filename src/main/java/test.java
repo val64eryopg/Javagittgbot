@@ -1,14 +1,8 @@
 import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +41,7 @@ public class test {
             }
 
         } catch (IOException e) {
+            return ""
             System.out.println("не подлючились к странице");
         }
         return "нет такого города";
