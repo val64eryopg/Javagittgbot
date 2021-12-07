@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.*;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -18,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class what extends TelegramLongPollingBot{
+public class What extends TelegramLongPollingBot{
 
 
     @Override
@@ -59,21 +56,21 @@ public class what extends TelegramLongPollingBot{
                         message
                                 .getText()
                                 .substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
-                SendToUser(Logic.SwitchMessage(command,message.getChatId().toString()),message.getChatId().toString());
+                sendToUser(Logic.switchMessage(command,message.getChatId().toString()),message.getChatId().toString());
                 System.out.println("случилось непредвиденное");
 
 
             }
         }
         else {
-            if (Logic.database.checkUserCodtion(message.getChatId().toString())) {
-                String[] zz = Logic.database.checkUserCodtionf(message.getChatId().toString()).get(1).split("%");
+            if (Logic.database.checkUserCondition(message.getChatId().toString())) {
+                String[] zz = Logic.database.checkUserConditionf(message.getChatId().toString()).get(1).split("%");
                 if (zz[1].equals("выбираем город") && message.hasText()) {
                     execute(SendMessage.builder()
                             .text(Logic.getTimeFromPage(message.getText()))
                             .chatId(message.getChatId().toString())
                             .build());
-                    Logic.database.delUserCondtion(message.getChatId().toString());
+                    Logic.database.delUserCondition(message.getChatId().toString());
                 } else {
                     String regex = "\\d{1,2}:\\d{2}-.+";
                     Pattern pattern = Pattern.compile(regex);
@@ -81,8 +78,8 @@ public class what extends TelegramLongPollingBot{
                     if (matcher.matches()) {
                         System.out.println("суда нахуй попал");
                         try {
-                            System.out.println(Logic.database.checkUserCodtionf(message.getChatId().toString()).get(1));
-                            String[] z = Logic.database.checkUserCodtionf(message.getChatId().toString()).get(1).split("%");
+                            System.out.println(Logic.database.checkUserConditionf(message.getChatId().toString()).get(1));
+                            String[] z = Logic.database.checkUserConditionf(message.getChatId().toString()).get(1).split("%");
                             System.out.println(z[0] + " " + z[1]);
                             Date date = new Date();
                             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
@@ -97,8 +94,8 @@ public class what extends TelegramLongPollingBot{
                                     .chatId(message.getChatId().toString())
                                     .build());
                             String[] TimeAndDo = messages.split("-");
-                            Logic.database.delUserCondtion(message.getChatId().toString());
-                            Logic.Writing(message.getChatId().toString(), resolt, TimeAndDo[0], TimeAndDo[1]);
+                            Logic.database.delUserCondition(message.getChatId().toString());
+                            Logic.writing(message.getChatId().toString(), resolt, TimeAndDo[0], TimeAndDo[1]);
                         } catch (Throwable e) {
                             System.out.println("видать ошибка в том что массив пустой"
                             );
@@ -126,7 +123,7 @@ public class what extends TelegramLongPollingBot{
 
 
     @SneakyThrows
-    public void SendToUser(ResultsCommand TextAndList, String chatId){
+    public void sendToUser(ResultsCommand TextAndList, String chatId){
         //метод нужен для отправки сообщения пользователю в если у нас сообщение без кнопок у нас массив с первым элементом "не то"
         String str = "";
         for (int i = 0 ;i < TextAndList.getMyArray().length;i++){
@@ -172,13 +169,13 @@ public class what extends TelegramLongPollingBot{
 
     @Override
     public String getBotToken() {
-        return getToken.getBotToken();
+        return GetToken.getBotToken();
     }
 
 
     @SneakyThrows
     public static void main(String[] args) {
-        what bot = new what();
+        What bot = new What();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
         Multithreading newThread = new Multithreading(bot);

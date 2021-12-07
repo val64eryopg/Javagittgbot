@@ -5,7 +5,7 @@ final class ResultsCommand {
     private  String first;
     private  String[] second;
 
-    public void SetResult(String first) {
+    public void setResult(String first) {
         this.first = first;
     }
 

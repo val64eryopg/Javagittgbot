@@ -10,8 +10,8 @@ import java.util.*;
 
 public class Logic {
 
-    public static Database database = new Database(getdatabase.getUserName(),
-            getdatabase.getPassword(), getdatabase.getUrl());
+    public static Database database = new Database(GetDatabase.getUserName(),
+            GetDatabase.getPassword(), GetDatabase.getUrl());
 
 
     public static String getTimeFromPage(String city) {
@@ -42,7 +42,7 @@ public class Logic {
                 case "Выберете число этого месяца:":
                     if (!(CommandOrText.equals("следущий месяц"))) {
 //              if((database.checkUserCodtion(chatId))) {
-                        database.addUserCondtion(chatId, ListOfButtons + "%" + CommandOrText);
+                        database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
                         System.out.println("я добавился");
 //            mc.setS(ListOfButtons);
 //            mc.setI(CommandOrText);
@@ -64,7 +64,7 @@ public class Logic {
     }
 
 
-    public static ResultsCommand SwitchMessage(String command, String chatId) {
+    public static ResultsCommand switchMessage(String command, String chatId) {
         //разбор команды
         ResultsCommand result = new ResultsCommand();
         System.out.println("я попал в метод switchMessege");
@@ -76,7 +76,7 @@ public class Logic {
                 for (Season date : Season.values()) {
                     Buttons1.add(date.name());
                 }
-                result.SetResult("выберете день недели");
+                result.setResult("выберете день недели");
                 String[] array1 = new String[Buttons1.size()];
                 for (int i = 0; i < Buttons1.size(); i++) {
                     array1[i] = Buttons1.get(i);
@@ -112,13 +112,13 @@ public class Logic {
                 for (int i = 0; i < Buttons.size(); i++) {
                     array[i] = Buttons.get(i);
                 }
-                result.SetResult("Выберете число этого месяца:");
+                result.setResult("Выберете число этого месяца:");
                 result.setMyArray(array);
                 System.out.println(result.getFirst());
                 return result;
             case "/start":
                 ArrayList<String> Buttons44 = new ArrayList<String>();
-                result.SetResult(
+                result.setResult(
                         "Доброго времени, суток наш бот записывает и отображает ваши задачи" +
                                 "\n Вот список доступных команд такой: " +
                                 "\n /DeleteTask " +
@@ -135,7 +135,7 @@ public class Logic {
             case "/LookAtWatch":
 
                 ArrayList<String> Buttons3 = new ArrayList<String>();
-                result.SetResult("Напишите город:");
+                result.setResult("Напишите город:");
                 Buttons3.add("не то");
                 String[] array11 = new String[Buttons3.size()];
                 for (int i = 0; i < Buttons3.size(); i++) {
@@ -143,7 +143,7 @@ public class Logic {
                 }
                 ConditionOfTheObject mc1 = ConditionOfTheObject.COMMAND;
                 mc1.setI("выбираем город");
-                database.addUserCondtion(chatId, "/LookAtWatch%выбираем город");
+                database.addUserCondition(chatId, "/LookAtWatch%выбираем город");
 
                 result.setMyArray(array11);
                 return result;
@@ -151,11 +151,11 @@ public class Logic {
                 ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
                 mc.setS("ТипКоманды");
                 mc.setI("Значение");
-                database.delUserCondtion(chatId);
-                System.out.println(database.checkUserCodtionf(chatId));
+                database.delUserCondition(chatId);
+                System.out.println(database.checkUserConditionf(chatId));
                 break;
             case "/DeleteTask":
-                result.SetResult("Нажмите на то что хотите удалить:");
+                result.setResult("Нажмите на то что хотите удалить:");
                 try {
                     ArrayList<String> check = database.checkTasks(chatId);
                     if (check.size() != 0) {
@@ -175,7 +175,7 @@ public class Logic {
                 }
                 break;
             case "/MyTask":
-                result.SetResult("Вот список ваших задач:");
+                result.setResult("Вот список ваших задач:");
                 try {
                     ArrayList<String> check = database.checkTasks(chatId);
                     if (check.size() != 0) {
@@ -196,8 +196,8 @@ public class Logic {
             case "/HELP":
                 ArrayList<String> Buttons4 = new ArrayList<String>();
                 String strHelp = "";
-                result.SetResult(
-                        "Вот список доступных команд такой: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
+                result.setResult(
+                        "Список доступных команд: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
                 String[] array5 = new String[Buttons4.size()];
                 for (int i = 0; i < Buttons4.size(); i++) {
                     array5[i] = Buttons4.get(i);
@@ -215,7 +215,7 @@ public class Logic {
     }
 
 
-    public static void Writing(String chatId, String Data, String Time, String Task) throws SQLException, ClassNotFoundException {
+    public static void writing(String chatId, String Data, String Time, String Task) throws SQLException, ClassNotFoundException {
         database.addTask(chatId, Data, Time, Task);
         System.out.println(database.checkTasks(chatId));
     }

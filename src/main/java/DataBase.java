@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.sql.*;
 
 class Database {
-  public static String USER_NAME = getdatabase.getUserName();
-  public static String PASSWORD = getdatabase.getPassword();
-  public static String URL = getdatabase.getUrl();
+  public static String USER_NAME = GetDatabase.getUserName();
+  public static String PASSWORD = GetDatabase.getPassword();
+  public static String URL = GetDatabase.getUrl();
   public static Statement statement;
   public static Connection connection;
 
@@ -102,7 +102,7 @@ class Database {
   }
 
 
-  boolean addUserCondtion(String username, String condtion){
+  boolean addUserCondition(String username, String condtion){
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
       statement.executeUpdate("INSERT INTO users(username, cond) value ('"+username+"', '"+condtion+"')");
@@ -114,7 +114,7 @@ class Database {
   }
 
 
-  ArrayList<String> checkUserCodtionf(String username){
+  ArrayList<String> checkUserConditionf(String username){
     ArrayList<String> result = new ArrayList<String>(){};
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
@@ -129,7 +129,7 @@ class Database {
     return result;
   }
 
-  boolean checkUserCodtion(String username){
+  boolean checkUserCondition(String username){
     try{
 
       Class.forName("com.mysql.cj.jdbc.Driver");
@@ -146,7 +146,7 @@ class Database {
     }
   }
 
-  boolean delUserCondtion(String username){
+  boolean delUserCondition(String username){
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
       statement.executeUpdate("Delete from users where username = '"+username+"'");

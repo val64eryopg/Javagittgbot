@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 
-public class getdatabase {
+public class GetDatabase {
 
     static String getUserName() {
         Properties props = new Properties();

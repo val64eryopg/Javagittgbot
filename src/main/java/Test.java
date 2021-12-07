@@ -1,18 +1,15 @@
-import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class test {
+public class Test {
     public static void main(String[] args) {
-        String a = GetPage("Абиджан");
+        String a = getPage("Абиджан");
         System.out.println(a);
     }
 
-    public static String GetPage(String city) {
+    public static String getPage(String city) {
 //        добываем время по запросу если нет города честно это говорим
         try {
             Document doc = Jsoup.connect("https://dateandtime.info/ru/index.php#")

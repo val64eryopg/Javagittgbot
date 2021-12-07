@@ -5,11 +5,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Multithreading extends Thread {
-    private static Database database = new Database(getdatabase.getUserName(),
-            getdatabase.getPassword(), getdatabase.getUrl());
-    private what bot;
+    private static Database database = new Database(GetDatabase.getUserName(),
+            GetDatabase.getPassword(), GetDatabase.getUrl());
+    private What bot;
 
-    Multithreading(what bot) {
+    Multithreading(What bot) {
         this.bot = bot;
     }
 

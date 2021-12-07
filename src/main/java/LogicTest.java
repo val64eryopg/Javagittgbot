@@ -2,13 +2,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.sql.*;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class LogicTest {
 
-    private static final Database database = new Database(getdatabase.getUserName(), getdatabase.getPassword(), getdatabase.getUrl());
+    private static final Database database = new Database(GetDatabase.getUserName(), GetDatabase.getPassword(), GetDatabase.getUrl());
 
 //    @org.junit.jupiter.api.Test
 //    void getTime() {
@@ -29,14 +28,14 @@ class LogicTest {
 
     @Test
     void getToken() {
-        assertNotNull(getToken.getBotToken());
+        assertNotNull(GetToken.getBotToken());
     }
 
     @Test
     void testNamePassURL(){
-        assertNotNull(getdatabase.getUserName());
-        assertNotNull(getdatabase.getUrl());
-        assertNotNull(getdatabase.getPassword());
+        assertNotNull(GetDatabase.getUserName());
+        assertNotNull(GetDatabase.getUrl());
+        assertNotNull(GetDatabase.getPassword());
     }
 
 
@@ -54,7 +53,7 @@ class LogicTest {
             String date_task ="";
             String time_task ="";
             String task ="";
-            try (Connection conn = DriverManager.getConnection(getdatabase.getUrl(), getdatabase.getUserName(), getdatabase.getPassword())) {
+            try (Connection conn = DriverManager.getConnection(GetDatabase.getUrl(), GetDatabase.getUserName(), GetDatabase.getPassword())) {
                 Statement statement = conn.createStatement();
                 ResultSet resultSet = statement.executeQuery(
                         "SELECT * from tasks where chat_id = '" + chat_id + "'");
@@ -112,7 +111,7 @@ class LogicTest {
 
     @Test
     void testSwitchMessageRegistrationForA_Week() {
-        ResultsCommand result = Logic.SwitchMessage(command, chatId);
+        ResultsCommand result = Logic.switchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
@@ -122,7 +121,7 @@ class LogicTest {
     @Test
     void testSwitchMessageRegistrationForA_Month() {
         command = "/RegistrationForA_Month";
-        result = Logic.SwitchMessage(command, chatId);
+        result = Logic.switchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
@@ -132,7 +131,7 @@ class LogicTest {
     @Test
     void testSwitchMessageLookAtWatch() {
         command = "/LookAtWatch";
-        result = Logic.SwitchMessage(command, chatId);
+        result = Logic.switchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
@@ -143,7 +142,7 @@ class LogicTest {
     @Test
     void testSwitchMessageDeleteTask() {
         command = "/DeleteTask";
-        result = Logic.SwitchMessage(command, chatId);
+        result = Logic.switchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
@@ -153,7 +152,7 @@ class LogicTest {
     @Test
     void testSwitchMyTask() {
         command = "/MyTask";
-        result = Logic.SwitchMessage(command, chatId);
+        result = Logic.switchMessage(command, chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
         assertNotNull(result.getMyArray());
@@ -163,10 +162,10 @@ class LogicTest {
     @Test
     void testSwitchHelp() {
         command = "/HELP";
-        result = Logic.SwitchMessage(command,chatId);
+        result = Logic.switchMessage(command,chatId);
         assertNotNull(result);
         assertNotNull(result.getFirst());
-        assertEquals(result.getFirst(), "Cписок доступных команд: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
+        assertEquals(result.getFirst(), "Список доступных команд: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
         // assertEquals(result.getMyArray().length,0);
     }
 
@@ -199,10 +198,10 @@ class LogicTest {
     void testUserCondition(){
         String username = "pupa";
         String condition = "4444";
-        assertTrue(database.addUserCondtion(username,condition));
-        assertTrue(database.checkUserCodtion(username));
-        assertNotNull(database.checkUserCodtionf(username));
-        database.delUserCondtion(username);
+        assertTrue(database.addUserCondition(username,condition));
+        assertTrue(database.checkUserCondition(username));
+        assertNotNull(database.checkUserConditionf(username));
+        database.delUserCondition(username);
     }
 
 }

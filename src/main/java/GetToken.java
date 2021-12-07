@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
-public class getToken {
+public class GetToken {
     public static String getBotToken()  {
         Properties props = new Properties();
         try{
