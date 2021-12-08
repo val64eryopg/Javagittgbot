@@ -23,7 +23,8 @@ public class Multithreading extends Thread {
 //        calendar.set(Calendar.MINUTE, 42);
 //        calendar.set(Calendar.SECOND, 12);
 //        System.out.println(calendar.getTime());
-        while (true) {sleep(100000);
+        while (true) {
+            sleep(100000);
             for (String s : database.returnTasks()) {
                 if (Logic.equalityDates(Logic.getData(), s)) {
                     String chatId = s.split(" ")[0];

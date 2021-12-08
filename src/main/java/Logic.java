@@ -55,6 +55,21 @@ public class Logic {
                         System.out.println("не попал");
                 }
             }
+        }else{
+            database.delUserCondition(chatId);
+            switch (ListOfButtons) {
+                case "Выберете число этого месяца:":
+                    if (!(CommandOrText.equals("следущий месяц"))) {
+                        database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
+                    }
+                    break;
+                case "Нажмите на то что хотите удалить:":
+                    String[] words = CommandOrText.split(" ");
+                    database.delTask(chatId, words[0], words[1]);
+                    break;
+                default:
+                    System.out.println("не попал");
+            }
         }
     }
 
