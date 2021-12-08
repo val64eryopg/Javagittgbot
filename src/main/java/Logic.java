@@ -1,5 +1,4 @@
 import java.io.*;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -16,49 +15,45 @@ public class Logic {
 
     public static String getTimeFromPage(String city) {
 //        добываем время по запросу если нет города честно это говорим
+        String href = "";
         try {
             Document doc = Jsoup.connect("https://dateandtime.info/ru/index.php#")
                     .get();
             Elements timeCity = doc.select("a[href^=\"city\"],time[datetime]");
             for (int i = 0; i <= timeCity.size() - 1; i++) {
                 if (timeCity.get(i).text().equals(city)) {
-                    return timeCity.get(i + 1).text();
+                    href =  timeCity.get(i + 1).text();
                 }
+            }
+            if (!(href.equals(""))){
+                return href;
+            }
+            else{
+                return "Город не найден";
             }
         } catch (IOException e) {
             return "не подлючились к странице";
         }
-        return "нет такого города";
     }
 
 
     public static void getCommand(String CommandOrText, String ListOfButtons, String chatId)
             throws SQLException, ClassNotFoundException {
-        System.out.println("здесь");
-
-        if (!(CommandOrText.equals("")) && !(ListOfButtons.equals(""))) {
-            ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
-            switch (ListOfButtons) {
-                case "Выберете число этого месяца:":
-                    if (!(CommandOrText.equals("следущий месяц"))) {
-//              if((database.checkUserCodtion(chatId))) {
-                        database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
-                        System.out.println("я добавился");
-//            mc.setS(ListOfButtons);
-//            mc.setI(CommandOrText);
-//              }
-                    }
-                    break;
-                case "выберете дату этой недели:":
-
-                    break;
-                case "Нажмите на то что хотите удалить:":
-                    String[] words = CommandOrText.split(" ");
-                    System.out.println(words[0] + words[1] + words[2]);
-                    database.delTask(chatId, words[0], words[1]);
-                    break;
-                default:
-                    System.out.println("не попал");
+        if(!(database.checkUserCondition(chatId))){
+            if (!(CommandOrText.equals("")) && !(ListOfButtons.equals(""))) {
+                switch (ListOfButtons) {
+                    case "Выберете число этого месяца:":
+                        if (!(CommandOrText.equals("следущий месяц"))) {
+                            database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
+                        }
+                        break;
+                    case "Нажмите на то что хотите удалить:":
+                        String[] words = CommandOrText.split(" ");
+                        database.delTask(chatId, words[0], words[1]);
+                        break;
+                    default:
+                        System.out.println("не попал");
+                }
             }
         }
     }

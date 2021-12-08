@@ -15,15 +15,15 @@ public class Multithreading extends Thread {
 
     @SneakyThrows
     public void run() {
-        Calendar calendar = new GregorianCalendar();
-        calendar.set(Calendar.YEAR, 2017);
-        calendar.set(Calendar.MONTH, 0);
-        calendar.set(Calendar.DAY_OF_MONTH, 25);
-        calendar.set(Calendar.HOUR_OF_DAY, 19);
-        calendar.set(Calendar.MINUTE, 42);
-        calendar.set(Calendar.SECOND, 12);
+//        Calendar calendar = new GregorianCalendar();
+//        calendar.set(Calendar.YEAR, 2017);
+//        calendar.set(Calendar.MONTH, 0);
+//        calendar.set(Calendar.DAY_OF_MONTH, 25);
+//        calendar.set(Calendar.HOUR_OF_DAY, 19);
+//        calendar.set(Calendar.MINUTE, 42);
+//        calendar.set(Calendar.SECOND, 12);
 //        System.out.println(calendar.getTime());
-        while (true) {
+        while (true) {sleep(100000);
             for (String s : database.returnTasks()) {
                 if (Logic.equalityDates(Logic.getData(), s)) {
                     String chatId = s.split(" ")[0];
@@ -35,6 +35,7 @@ public class Multithreading extends Thread {
                                     .build());
 
                 }
+
 //        bot.execute(
 //        SendMessage.builder()
 //                .text()
