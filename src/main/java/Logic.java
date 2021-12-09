@@ -110,7 +110,7 @@ public class Logic {
                     Buttons.add(str);
                 }
                 String[] array = new String[Buttons.size()];
-                for (int i = 0; i < Buttons.size(); i++) {
+                for (int i = 0; i <= Buttons.size(); i++) {
                     array[i] = Buttons.get(i);
                 }
                 result.setResult("Выберете число этого месяца:");
@@ -153,7 +153,7 @@ public class Logic {
                 mc.setS("ТипКоманды");
                 mc.setI("Значение");
                 database.delUserCondition(chatId);
-                System.out.println(database.checkUserConditionf(chatId));
+                System.out.println(database.parseUserCondition(chatId));
                 break;
             case "/DeleteTask":
                 result.setResult("Нажмите на то что хотите удалить:");
@@ -234,9 +234,18 @@ public class Logic {
     public static boolean equalityDates(Date dateNow, String dateFromDatabase) {
         String[] dateArray = dateFormat(dateNow).split(" ");
         String[] dateFromDatabaseArray = dateFromDatabase.split(" ");
+
+        System.out.println(dateArray[0]);
+        System.out.println(dateFromDatabaseArray[1]);
+
         boolean YearMonthDay = dateArray[0].equals(dateFromDatabaseArray[1]);
-        boolean HourMin = dateArray[1].regionMatches(0, dateFromDatabaseArray[2], 0, dateFromDatabaseArray[1].length() - 3);
-        return YearMonthDay & HourMin;
+        boolean Hour = dateArray[1].split(":")[0].regionMatches(0, dateFromDatabaseArray[2].split(":")[0], 0, 2);
+        boolean Min = dateArray[1].split(":")[1].regionMatches(0, dateFromDatabaseArray[2].split(":")[1], 0, 2);
+
+        System.out.println(dateArray[1].split(":")[0]);
+        System.out.println(dateArray[1].split(":")[1]);
+
+        return YearMonthDay & Hour & Min;
     }
 
     public static Date getData() {

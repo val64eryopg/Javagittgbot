@@ -200,7 +200,7 @@ class LogicTest {
         String condition = "4444";
         assertTrue(database.addUserCondition(username,condition));
         assertTrue(database.checkUserCondition(username));
-        assertNotNull(database.checkUserConditionf(username));
+        assertNotNull(database.parseUserCondition(username));
         database.delUserCondition(username);
     }
 

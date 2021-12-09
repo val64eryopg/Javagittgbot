@@ -114,7 +114,7 @@ class Database {
   }
 
 
-  ArrayList<String> checkUserConditionf(String username){
+  ArrayList<String> parseUserCondition(String username){
     ArrayList<String> result = new ArrayList<String>(){};
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");

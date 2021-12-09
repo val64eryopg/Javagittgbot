@@ -47,47 +47,43 @@ public class What extends TelegramLongPollingBot{
     @SneakyThrows
     public void handleMessage(Message message){
         //метод анализирует сообщение ли это или комана после чего отправляет ползователю соответсвующию команду
-
         if(message.hasText() && message.hasEntities()){
             Optional<MessageEntity> commandEntity =
                     message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
             if(commandEntity.isPresent()){
                 String command =
-                        message
-                                .getText()
-                                .substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
+                        message.getText().substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
                 sendToUser(Logic.switchMessage(command,message.getChatId().toString()),message.getChatId().toString());
                 System.out.println("случилось непредвиденное");
-
-
             }
         }
         else {
             if (Logic.database.checkUserCondition(message.getChatId().toString())) {
-                String[] zz = Logic.database.checkUserConditionf(message.getChatId().toString()).get(1).split("%");
-                if (zz[1].equals("выбираем город") && message.hasText()) {
+                String[] inputParse = Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+                if (inputParse[1].equals("выбираем город") && message.hasText()) {
                     execute(SendMessage.builder()
                             .text(Logic.getTimeFromPage(message.getText()))
                             .chatId(message.getChatId().toString())
                             .build());
                     Logic.database.delUserCondition(message.getChatId().toString());
-                } else {
+                }
+                else {
                     String regex = "\\d{1,2}:\\d{2}-.+";
                     Pattern pattern = Pattern.compile(regex);
                     Matcher matcher = pattern.matcher(message.getText());
                     if (matcher.matches()) {
                         System.out.println("суда нахуй попал");
                         try {
-                            System.out.println(Logic.database.checkUserConditionf(message.getChatId().toString()).get(1));
-                            String[] z = Logic.database.checkUserConditionf(message.getChatId().toString()).get(1).split("%");
+                            String[] z = Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
                             System.out.println(z[0] + " " + z[1]);
                             Date date = new Date();
                             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
                             cal.setTime(date);
                             int year = cal.get(Calendar.YEAR);
-                            int month = cal.get(Calendar.MONTH);
-                            String resolt = year + "-" + month + "-" + z[1];
-                            System.out.println(resolt);
+                            int month = cal.get(Calendar.MONTH)+1;
+                            System.out.println(month);
+                            String result = year + "-" + month + "-" + z[1];
+                            System.out.println(result);
                             String messages = message.getText();
                             execute(SendMessage.builder()
                                     .text("Задача записана: " + messages)
@@ -95,7 +91,7 @@ public class What extends TelegramLongPollingBot{
                                     .build());
                             String[] TimeAndDo = messages.split("-");
                             Logic.database.delUserCondition(message.getChatId().toString());
-                            Logic.writing(message.getChatId().toString(), resolt, TimeAndDo[0], TimeAndDo[1]);
+                            Logic.writing(message.getChatId().toString(), result, TimeAndDo[0], TimeAndDo[1]);
                         } catch (Throwable e) {
                             System.out.println("видать ошибка в том что массив пустой"
                             );
@@ -105,12 +101,8 @@ public class What extends TelegramLongPollingBot{
                                 .text("усп что то не то ввели ведите заново или отмените \n/otmena")
                                 .chatId(message.getChatId().toString())
                                 .build());
-
-
                     }
-
                 }
-
             }else
                 execute(SendMessage.builder()
                         .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
@@ -178,7 +170,7 @@ public class What extends TelegramLongPollingBot{
         What bot = new What();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
-        Multithreading newThread = new Multithreading(bot);
+        MultiThread newThread = new MultiThread(bot);
         newThread.start();
     }
 
