@@ -41,35 +41,28 @@ public class Logic {
             throws SQLException, ClassNotFoundException {
         if(!(database.checkUserCondition(chatId))){
             if (!(CommandOrText.equals("")) && !(ListOfButtons.equals(""))) {
-                switch (ListOfButtons) {
-                    case "Выберете число этого месяца:":
-                        if (!(CommandOrText.equals("следущий месяц"))) {
-                            database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
-                        }
-                        break;
-                    case "Нажмите на то что хотите удалить:":
-                        String[] words = CommandOrText.split(" ");
-                        database.delTask(chatId, words[0], words[1]);
-                        break;
-                    default:
-                        System.out.println("не попал");
-                }
+                switchListOfButtons(CommandOrText, ListOfButtons, chatId);
             }
         }else{
             database.delUserCondition(chatId);
-            switch (ListOfButtons) {
-                case "Выберете число этого месяца:":
-                    if (!(CommandOrText.equals("следущий месяц"))) {
-                        database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
-                    }
-                    break;
-                case "Нажмите на то что хотите удалить:":
-                    String[] words = CommandOrText.split(" ");
-                    database.delTask(chatId, words[0], words[1]);
-                    break;
-                default:
-                    System.out.println("не попал");
-            }
+            switchListOfButtons(CommandOrText, ListOfButtons, chatId);
+        }
+    }
+
+    private static void switchListOfButtons(String CommandOrText, String ListOfButtons,
+        String chatId)  throws SQLException, ClassNotFoundException {
+        switch (ListOfButtons) {
+            case "Выберете число этого месяца:":
+                if (!(CommandOrText.equals("следущий месяц"))) {
+                    database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
+                }
+                break;
+            case "Нажмите на то что хотите удалить:":
+                String[] words = CommandOrText.split(" ");
+                database.delTask(chatId, words[0], words[1]);
+                break;
+            default:
+                System.out.println("не попал");
         }
     }
 
@@ -79,8 +72,6 @@ public class Logic {
         ResultsCommand result = new ResultsCommand();
         System.out.println("я попал в метод switchMessege");
         switch (command) {
-
-
             case "/RegistrationForA_Week":
                 ArrayList<String> Buttons1 = new ArrayList<String>();
                 for (Season date : Season.values()) {
@@ -214,6 +205,10 @@ public class Logic {
                 }
                 result.setMyArray(array5);
                 return result;
+            default:
+                result.setResult(
+                    "Команда не распознана.\nСписок доступных команд: \n /HELP \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
+                break;
         }
         return result;
     }
