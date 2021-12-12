@@ -32,11 +32,13 @@ public class What extends TelegramLongPollingBot{
     @SneakyThrows
     private void handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
-        System.out.println(message.getText());
+
         Logic.getCommand(callbackQuery.getData(), message.getText(),message.getChatId().toString());
-        if (!(message.getText().equals("Вот список ваших задач:"))&&!(message.getText().equals("Нажмите на то что хотите удалить:"))) {
-            execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите итересующие вас время и задачу в формате\n 66:66-раскрасить открытку").build());
+        if (message.getText().equals("Выберете число этого месяца:")){
+            execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите итересующие вас время и задачу в формате" +
+                    "\n 66:66-раскрасить открытку").build());
         }
+
         if(message.getText().equals("Нажмите на то что хотите удалить:")){execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
                 "задача успешно удалена"
         ).build());}
@@ -47,6 +49,7 @@ public class What extends TelegramLongPollingBot{
     @SneakyThrows
     public void handleMessage(Message message){
         //метод анализирует сообщение ли это или комана после чего отправляет ползователю соответсвующию команду
+
         if(message.hasText() && message.hasEntities()){
             Optional<MessageEntity> commandEntity =
                     message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
@@ -57,22 +60,39 @@ public class What extends TelegramLongPollingBot{
                 System.out.println("случилось непредвиденное");
             }
         }
+
         else {
             if (Logic.database.checkUserCondition(message.getChatId().toString())) {
-                String[] inputParse = Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
-                if (inputParse[1].equals("выбираем город") && message.hasText()) {
+                if(Logic.database.parseUserCondition(message.getChatId().toString()).equals("RegistrationOnCity")){
+                    String s = Logic.getTimeFromPage(message.getText());
+                    System.out.println(s);
+                    if (s.equals("Город не найден")){
+                        execute(SendMessage.builder()
+                                .text("к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса")
+                                .chatId(message.getChatId().toString())
+                                .build());
+                        Logic.database.delUserCondition(message.getChatId().toString());
+                    }
+                    else {
+                        execute(SendMessage.builder()
+                                .text("ваше текущее время" + s)
+                                .chatId(message.getChatId().toString())
+                                .build());
+                        Logic.database.delUserCondition(message.getChatId().toString());
+                    }
+                }
+                String[] zz = Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+                if (zz[1].equals("выбираем город") && message.hasText()) {
                     execute(SendMessage.builder()
                             .text(Logic.getTimeFromPage(message.getText()))
                             .chatId(message.getChatId().toString())
                             .build());
                     Logic.database.delUserCondition(message.getChatId().toString());
-                }
-                else {
+                } else {
                     String regex = "\\d{1,2}:\\d{2}-.+";
                     Pattern pattern = Pattern.compile(regex);
                     Matcher matcher = pattern.matcher(message.getText());
                     if (matcher.matches()) {
-                        System.out.println("суда нахуй попал");
                         try {
                             String[] z = Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
                             System.out.println(z[0] + " " + z[1]);
@@ -101,16 +121,21 @@ public class What extends TelegramLongPollingBot{
                                 .text("усп что то не то ввели ведите заново или отмените \n/otmena")
                                 .chatId(message.getChatId().toString())
                                 .build());
+
+
                     }
+
                 }
-            }else
+
+            }else {
+                System.out.println("никуда не попал");
                 execute(SendMessage.builder()
                         .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
                         .chatId(message.getChatId().toString())
                         .build());
-
+            }
         }
-                        }
+}
 
 
 
@@ -121,7 +146,7 @@ public class What extends TelegramLongPollingBot{
         for (int i = 0 ;i < TextAndList.getMyArray().length;i++){
             str+=TextAndList.getMyArray()[i];
         }
-        System.out.println("теперь я в методе SendToUser вот его ввод:"+str);
+
         if (!(str.equals("не то"))){
             execute(SendMessage.builder()
                     .text(TextAndList.getFirst())

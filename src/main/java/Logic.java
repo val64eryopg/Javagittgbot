@@ -70,26 +70,13 @@ public class Logic {
     public static ResultsCommand switchMessage(String command, String chatId) {
         //разбор команды
         ResultsCommand result = new ResultsCommand();
-        System.out.println("я попал в метод switchMessege");
+        String[] defolt = {"не то"};
         switch (command) {
-            case "/RegistrationForA_Week":
-                ArrayList<String> Buttons1 = new ArrayList<String>();
-                for (Season date : Season.values()) {
-                    Buttons1.add(date.name());
-                }
-                result.setResult("выберете день недели");
-                String[] array1 = new String[Buttons1.size()];
-                for (int i = 0; i < Buttons1.size(); i++) {
-                    array1[i] = Buttons1.get(i);
-                }
-                result.setMyArray(array1);
-                result.setMyArray(array1);
-                return result;
 
 
             case "/RegistrationForA_Month":
 
-                System.out.println("я попал в нужный кейс");
+
                 ArrayList<String> Buttons = new ArrayList<String>();
                 String str = new String("");
                 int DaysAtMonth = 0;
@@ -110,15 +97,15 @@ public class Logic {
                     Buttons.add(str);
                 }
                 String[] array = new String[Buttons.size()];
-                for (int i = 0; i <= Buttons.size(); i++) {
+                for (int i = 0; i < Buttons.size(); i++) {
                     array[i] = Buttons.get(i);
                 }
                 result.setResult("Выберете число этого месяца:");
                 result.setMyArray(array);
-                System.out.println(result.getFirst());
+
                 return result;
             case "/start":
-                ArrayList<String> Buttons44 = new ArrayList<String>();
+
                 result.setResult(
                         "Доброго времени, суток наш бот записывает и отображает ваши задачи" +
                                 "\n Вот список доступных команд такой: " +
@@ -126,36 +113,30 @@ public class Logic {
                                 "\n /MyTask " +
                                 "\n /LookAtWatch " +
                                 "\n /RegistrationForA_Month " +
-                                "\n /RegistrationForA_Week");
-                String[] array55 = new String[Buttons44.size()];
-                for (int i = 0; i < Buttons44.size(); i++) {
-                    array55[i] = Buttons44.get(i);
-                }
-                result.setMyArray(array55);
+                                "\n /RegistrationForA_Week"+
+                                "\n Для того чтобы пользоваться этим ботом необходимо привязаться к городу дефолт екатеринбург" +
+                                "\n команда для привязки екатеринбург" +
+                                "\n /RegistrationOnCity");
+
+                result.setMyArray(defolt);
                 return result;
             case "/LookAtWatch":
 
-                ArrayList<String> Buttons3 = new ArrayList<String>();
                 result.setResult("Напишите город:");
-                Buttons3.add("не то");
-                String[] array11 = new String[Buttons3.size()];
-                for (int i = 0; i < Buttons3.size(); i++) {
-                    array11[i] = Buttons3.get(i);
-                }
-                ConditionOfTheObject mc1 = ConditionOfTheObject.COMMAND;
-                mc1.setI("выбираем город");
                 database.addUserCondition(chatId, "/LookAtWatch%выбираем город");
-
-                result.setMyArray(array11);
+                result.setMyArray(defolt);
                 return result;
             case "/otmena":
-                ConditionOfTheObject mc = ConditionOfTheObject.COMMAND;
-                mc.setS("ТипКоманды");
-                mc.setI("Значение");
                 database.delUserCondition(chatId);
-                System.out.println(database.parseUserCondition(chatId));
                 break;
+            case "/RegistrationOnCity":
+                result.setMyArray(defolt);
+                result.setResult("Напишите ваш город");
+                database.addUserCondition(chatId,"RegistrationOnCity");
+                return result;
+
             case "/DeleteTask":
+
                 result.setResult("Нажмите на то что хотите удалить:");
                 try {
                     ArrayList<String> check = database.checkTasks(chatId);
@@ -176,6 +157,7 @@ public class Logic {
                 }
                 break;
             case "/MyTask":
+
                 result.setResult("Вот список ваших задач:");
                 try {
                     ArrayList<String> check = database.checkTasks(chatId);
@@ -194,30 +176,33 @@ public class Logic {
                     ex.printStackTrace();
                 }
                 break;
+
             case "/HELP":
-                ArrayList<String> Buttons4 = new ArrayList<String>();
-                String strHelp = "";
+
                 result.setResult(
-                        "Список доступных команд: \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
-                String[] array5 = new String[Buttons4.size()];
-                for (int i = 0; i < Buttons4.size(); i++) {
-                    array5[i] = Buttons4.get(i);
-                }
-                result.setMyArray(array5);
+                        "Список доступных команд: " +
+                                "\n /DeleteTask" +
+                                " \n /MyTask" +
+                                " \n /LookAtWatch" +
+                                " \n /RegistrationForA_Week");
+
+                result.setMyArray(defolt);
                 return result;
             default:
                 result.setResult(
-                    "Команда не распознана.\nСписок доступных команд: \n /HELP \n /DeleteTask \n /MyTask \n /LookAtWatch \n /RegistrationForA_Month \n /RegistrationForA_Week");
-                break;
+                    "Команда не распознана." +
+                            "\nСписок доступных команд:" +
+                            " \n /HELP \n" +
+                            " /DeleteTask " +
+                            "\n /MyTask " +
+                            "\n /LookAtWatch " +
+                            "\n /RegistrationForA_Month ");
+                result.setMyArray(defolt);
+                return result;
         }
         return result;
     }
 
-
-    public static void hoIAM(String init) {
-        // метод должен определять на какое число идет запись
-
-    }
 
 
     public static void writing(String chatId, String Data, String Time, String Task) throws SQLException, ClassNotFoundException {
