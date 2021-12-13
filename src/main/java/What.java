@@ -63,23 +63,39 @@ public class What extends TelegramLongPollingBot{
 
         else {
             if (Logic.database.checkUserCondition(message.getChatId().toString())) {
-                if(Logic.database.parseUserCondition(message.getChatId().toString()).equals("RegistrationOnCity")){
+                if(Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split(" ")[1].equals("RegistrationOnCity")){
                     String s = Logic.getTimeFromPage(message.getText());
-                    System.out.println(s);
                     if (s.equals("Город не найден")){
                         execute(SendMessage.builder()
-                                .text("к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса")
+                                .text("к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса или напишите его правильно")
                                 .chatId(message.getChatId().toString())
                                 .build());
                         Logic.database.delUserCondition(message.getChatId().toString());
                     }
                     else {
-                        execute(SendMessage.builder()
-                                .text("ваше текущее время" + s)
-                                .chatId(message.getChatId().toString())
-                                .build());
-                        Logic.database.delUserCondition(message.getChatId().toString());
+                        String regex = "\\S{2} \\d{1,2}:\\d{1,2}";
+                        Pattern pattern = Pattern.compile(regex);
+                        Matcher matcher = pattern.matcher(s);
+
+                        if(matcher.matches()) {
+                            System.out.println("есть такой город ");
+                            Logic.database.addUserCity(message.getChatId().toString(),Logic.gettingTimeZone(s));
+                            execute(SendMessage.builder()
+                                    .text("ваше текущее время: " + s)
+                                    .chatId(message.getChatId().toString())
+                                    .build());
+                            Logic.database.delUserCondition(message.getChatId().toString());
+                        }
+                        else {
+                            execute(SendMessage.builder()
+                                    .text("Ваш город пока не подключен" +
+                                            "\n попробуйте указать город с вашим часовым поясом" )
+                                    .chatId(message.getChatId().toString())
+                                    .build());
+                            Logic.database.delUserCondition(message.getChatId().toString());
+                        }
                     }
+                    Logic.database.delUserCondition(message.getChatId().toString());
                 }
                 String[] zz = Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
                 if (zz[1].equals("выбираем город") && message.hasText()) {

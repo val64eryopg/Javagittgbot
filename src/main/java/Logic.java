@@ -66,6 +66,12 @@ public class Logic {
         }
     }
 
+    public static String gettingTimeZone(String str){
+        //Метод вычисляет +- от гринвича от времени
+
+        return " ";
+    }
+
 
     public static ResultsCommand switchMessage(String command, String chatId) {
         //разбор команды
@@ -115,7 +121,7 @@ public class Logic {
                                 "\n /RegistrationForA_Month " +
                                 "\n /RegistrationForA_Week"+
                                 "\n Для того чтобы пользоваться этим ботом необходимо привязаться к городу дефолт екатеринбург" +
-                                "\n команда для привязки екатеринбург" +
+                                "\n команда для привязки " +
                                 "\n /RegistrationOnCity");
 
                 result.setMyArray(defolt);

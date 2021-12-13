@@ -114,6 +114,9 @@ class Database {
   }
 
 
+
+
+
   ArrayList<String> parseUserCondition(String username){
     ArrayList<String> result = new ArrayList<String>(){};
     try{
