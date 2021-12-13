@@ -162,7 +162,7 @@ class Database {
   boolean addUserCity(String chat_id, String city){
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
-      statement.executeUpdate("INSERT INTO users_city(chat_id, city) value ('"+chat_id+"', '"+city+"')");
+      statement.executeUpdate("INSERT INTO user_city(chat_id, city) value ('"+chat_id+"', '"+city+"')");
     } catch (Exception e){
       System.out.println(e);
       return false;
@@ -174,7 +174,7 @@ class Database {
     ArrayList<String> result = new ArrayList<String>(){};
     try{
       Class.forName("com.mysql.cj.jdbc.Driver");
-      ResultSet resultSet = statement.executeQuery("SELECT * from users_city where chat_id = '"+chat_id+"'");
+      ResultSet resultSet = statement.executeQuery("SELECT * from user_city where chat_id = '"+chat_id+"'");
       while (resultSet.next()) {
         result.add(resultSet.getString(2) + " "
             + resultSet.getString(3));
@@ -189,7 +189,7 @@ class Database {
     try{
 
       Class.forName("com.mysql.cj.jdbc.Driver");
-      ResultSet resultSet = statement.executeQuery("SELECT * from users_city where chat_id = '"+ chat_id +"'");
+      ResultSet resultSet = statement.executeQuery("SELECT * from user_city where chat_id = '"+ chat_id +"'");
       if (resultSet.next()){
         return true;
       }
@@ -205,7 +205,7 @@ class Database {
   boolean delUserCity(String chat_id){
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
-      statement.executeUpdate("Delete from users_city where chat_id = '"+chat_id+"'");
+      statement.executeUpdate("Delete from user_city where chat_id = '"+chat_id+"'");
     } catch (Exception e) {
       return false;
     }

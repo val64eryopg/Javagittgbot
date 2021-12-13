@@ -9,9 +9,19 @@ import java.util.*;
 
 public class Logic {
 
+    public static Map<String, Integer> dateToInt = new HashMap<String, Integer>();
     public static Database database = new Database(GetDatabase.getUserName(),
             GetDatabase.getPassword(), GetDatabase.getUrl());
 
+    public static void DateInizialition(){
+        dateToInt.put("Пн", 1);
+        dateToInt.put("Вт", 2);
+        dateToInt.put("Ср", 3);
+        dateToInt.put("Чт", 4);
+        dateToInt.put("Пт", 5);
+        dateToInt.put("Сб", 6);
+        dateToInt.put("Вс", 7);
+    }
 
     public static String getTimeFromPage(String city) {
 //        добываем время по запросу если нет города честно это говорим
@@ -66,10 +76,41 @@ public class Logic {
         }
     }
 
-    public static String gettingTimeZone(String str){
-        //Метод вычисляет +- от гринвича от времени
+    public static int dateSubraction(String otherDate){
+        String localDate = getTimeFromPage("Екатеринбург");
+        System.out.println(localDate.split(" ")[0]);
+        int dayOfWeekIntLocal = dateToInt.get(localDate.split(" ")[0]);
+        System.out.println(otherDate);
+        int dayOfWeekIntOther = dateToInt.get(otherDate.split(" ")[0]);
+        System.out.println(dayOfWeekIntLocal);
+        if (dayOfWeekIntOther == 7 || dayOfWeekIntLocal > dayOfWeekIntOther)
+            return -1;
+        else if (dayOfWeekIntOther > dayOfWeekIntLocal)
+            return 1;
 
-        return " ";
+        return 0;
+    }
+
+    public static String gettingTimeZone(String str){
+        String[] localDate = dateFormat(getData()).split(" ");
+        String[] otherDate = str.split(" ");
+        Calendar timeInBeforeBreak = Calendar.getInstance();
+        timeInBeforeBreak.clear();
+
+        Calendar timeOutBeforeBreak = Calendar.getInstance();
+        timeOutBeforeBreak.clear();
+        int k = dateSubraction(str);
+        timeInBeforeBreak.add(Calendar.DAY_OF_MONTH, Integer.parseInt(localDate[0].split("-")[2]));
+        timeInBeforeBreak.add(Calendar.HOUR_OF_DAY, Integer.parseInt(localDate[1].split(":")[0]));
+        timeInBeforeBreak.add(Calendar.MINUTE, Integer.parseInt(localDate[1].split(":")[1]));
+        timeOutBeforeBreak.add(Calendar.DAY_OF_MONTH, Integer.parseInt(localDate[0].split("-")[2]) + k);
+        timeOutBeforeBreak.add(Calendar.HOUR_OF_DAY, Integer.parseInt(otherDate[1].split(":")[0]));
+
+        timeOutBeforeBreak.add(Calendar.MINUTE, Integer.parseInt(otherDate[1].split(":")[1]));
+
+        long timeMillis = timeOutBeforeBreak.getTimeInMillis() - timeInBeforeBreak.getTimeInMillis();
+        System.out.println(timeMillis/1000/60/60);
+        return timeMillis/1000/60/60+"";
     }
 
 
@@ -120,7 +161,7 @@ public class Logic {
                                 "\n /LookAtWatch " +
                                 "\n /RegistrationForA_Month " +
                                 "\n /RegistrationForA_Week"+
-                                "\n Для того чтобы пользоваться этим ботом необходимо привязаться к городу дефолт екатеринбург" +
+                                "\n Для того чтобы пользоваться этим ботом необходимо привязаться к городу дефолт Лондон" +
                                 "\n команда для привязки " +
                                 "\n /RegistrationOnCity");
 
@@ -238,6 +279,7 @@ public class Logic {
 
         return YearMonthDay & Hour & Min;
     }
+
 
     public static Date getData() {
         Date date = new Date();
