@@ -128,7 +128,7 @@ public class Logic {
                 String str = new String("");
                 int DaysAtMonth = 0;
 
-                for (date element : date.values()) {
+                for (CalendarDate element : CalendarDate.values()) {
                     if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
                         DaysAtMonth = element.getI();
                     }
