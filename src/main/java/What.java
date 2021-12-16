@@ -2,6 +2,7 @@ import java.util.*;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.DeleteChatStickerSet;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -62,8 +63,9 @@ public class What extends TelegramLongPollingBot{
         }
 
         else {
-            if (Logic.database.checkUserCondition(message.getChatId().toString())) {
-                if(Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split(" ")[1].equals("RegistrationOnCity")){
+            String ID = message.getChatId().toString();
+            if (Logic.database.checkUserCondition(ID)) {
+                if(Logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity")){
                     String s = Logic.getTimeFromPage(message.getText());
                     if (s.equals("Город не найден")){
                         execute(SendMessage.builder()
@@ -78,13 +80,23 @@ public class What extends TelegramLongPollingBot{
                         Matcher matcher = pattern.matcher(s);
 
                         if(matcher.matches()) {
-                            System.out.println("есть такой город ");
-                            Logic.database.addUserCity(message.getChatId().toString(),Logic.gettingTimeZone(s));
-                            execute(SendMessage.builder()
-                                    .text("ваше текущее время: " + s)
-                                    .chatId(message.getChatId().toString())
-                                    .build());
-                            Logic.database.delUserCondition(message.getChatId().toString());
+                            if (Logic.database.checkUserCity(ID)){
+                                Logic.database.delUserCity(message.getChatId().toString());
+
+                                Logic.database.addUserCity(message.getChatId().toString(), Logic.gettingTimeZone(s));
+                                execute(SendMessage.builder()
+                                        .text("ваше текущее время: " + s)
+                                        .chatId(ID)
+                                        .build());
+                                Logic.database.delUserCondition(ID);
+                            }else {
+                                Logic.database.addUserCity(ID, Logic.gettingTimeZone(s));
+                                execute(SendMessage.builder()
+                                        .text("ваше текущее время: " + s)
+                                        .chatId(message.getChatId().toString())
+                                        .build());
+                                Logic.database.delUserCondition(message.getChatId().toString());
+                            }
                         }
                         else {
                             execute(SendMessage.builder()
