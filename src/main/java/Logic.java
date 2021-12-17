@@ -1,3 +1,4 @@
+import java.awt.SystemTray;
 import java.io.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -263,21 +264,39 @@ public class Logic {
         return dateFormat.format(date);
     }
 
-    public static boolean equalityDates(Date dateNow, String dateFromDatabase) {
+    public static boolean equalityDate(String timeZoneUser, Date dateNow, String dateFromDatabase) {
         String[] dateArray = dateFormat(dateNow).split(" ");
         String[] dateFromDatabaseArray = dateFromDatabase.split(" ");
 
-        System.out.println(dateArray[0]);
-        System.out.println(dateFromDatabaseArray[1]);
+        return equalityDateTimeZone(dateArray,dateFromDatabaseArray,Integer.parseInt(timeZoneUser));
+    }
 
-        boolean YearMonthDay = dateArray[0].equals(dateFromDatabaseArray[1]);
-        boolean Hour = dateArray[1].split(":")[0].regionMatches(0, dateFromDatabaseArray[2].split(":")[0], 0, 2);
-        boolean Min = dateArray[1].split(":")[1].regionMatches(0, dateFromDatabaseArray[2].split(":")[1], 0, 2);
+    private static boolean equalityDateTimeZone(String[] dateArray, String[] dateFromDatabaseArray, int timeZoneUser){
 
-        System.out.println(dateArray[1].split(":")[0]);
-        System.out.println(dateArray[1].split(":")[1]);
+        int localDay = Integer.parseInt(dateArray[0].split("-")[2]);
+        int localHour = Integer.parseInt(dateArray[1].split(":")[0]);
+        int localMin = Integer.parseInt(dateArray[1].split(":")[1]);
 
-        return YearMonthDay & Hour & Min;
+        int userDay = Integer.parseInt(dateFromDatabaseArray[1].split("-")[2]);
+        int userHour = Integer.parseInt(dateFromDatabaseArray[2].split(":")[0]);
+        int userMin = Integer.parseInt(dateFromDatabaseArray[2].split(":")[1]);
+
+
+        Calendar localTime = Calendar.getInstance();
+        localTime.clear();
+        localTime.add(Calendar.DAY_OF_MONTH, localDay-1);
+        localTime.add(Calendar.HOUR_OF_DAY, localHour);
+        localTime.add(Calendar.MINUTE, localMin);
+
+        Calendar userTime = Calendar.getInstance();
+        userTime.clear();
+        userTime.add(Calendar.DAY_OF_MONTH, userDay-1);
+        userTime.add(Calendar.HOUR_OF_DAY, userHour);
+        userTime.add(Calendar.MINUTE, userMin);
+
+        localTime.setTimeInMillis(localTime.getTimeInMillis() + (1000*60*60*timeZoneUser));
+
+        return localTime.getTimeInMillis() == userTime.getTimeInMillis();
     }
 
 

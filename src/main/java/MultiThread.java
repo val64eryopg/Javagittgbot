@@ -1,13 +1,10 @@
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 public class MultiThread extends Thread {
-    private What bot;
+    private Bot bot;
 
-    MultiThread(What bot) {
+    MultiThread(Bot bot) {
         this.bot = bot;
     }
 
@@ -16,10 +13,14 @@ public class MultiThread extends Thread {
         while (true) {
             sleep(60000);
             for (String s : Logic.database.returnTasks()) {
-                if (Logic.equalityDates(Logic.getData(), s)) {
+
+                String chatId = s.split(" ")[0];
+                String task = s.split(" ")[3];
+                if (Logic.equalityDate(
+                                        Logic.database.parseUserCity(chatId).get(0).split( " ")[1], // не укаждого пользователя указано timezone
+                                        Logic.getData(),
+                                        s)) {
                     System.out.println(1);
-                    String chatId = s.split(" ")[0];
-                    String task = s.split(" ")[3];
                     bot.execute(
                             SendMessage.builder()
                                     .text(task + "Прошел срок выполнения вашей задачи")

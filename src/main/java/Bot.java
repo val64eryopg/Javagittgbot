@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class What extends TelegramLongPollingBot{
+public class Bot extends TelegramLongPollingBot{
 
 
     @Override
@@ -220,7 +220,7 @@ public class What extends TelegramLongPollingBot{
 
     @SneakyThrows
     public static void main(String[] args) {
-        What bot = new What();
+        Bot bot = new Bot();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
         Logic.DateInizialition();
