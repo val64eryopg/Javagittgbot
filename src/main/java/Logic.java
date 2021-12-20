@@ -68,7 +68,14 @@ public class Logic {
         switch (ListOfButtons) {
             case "Выберете число этого месяца:":
                 if (!(CommandOrText.equals("следущий месяц"))) {
+                    System.out.println("выберете число");
+                    if(database.checkUserCondition(chatId)){
+                    database.delUserCondition(chatId);
                     database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
+                    }
+                    else {
+                        database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
+                    }
                 }
                 break;
             case "Нажмите на то что хотите удалить:":
@@ -77,7 +84,13 @@ public class Logic {
                 break;
             case "Выберете число этого месяца и укажите повтор:":
                 if (!(CommandOrText.equals("следущий месяц"))) {
-                    database.addUserCondition(chatId,ListOfButtons + "%" + CommandOrText);
+                    if(database.checkUserCondition(chatId)){
+                        database.delUserCondition(chatId);
+                        database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
+                    }
+                    else {
+                        database.addUserCondition(chatId, ListOfButtons + "%" + CommandOrText);
+                    }
                 }
                 break;
 
@@ -168,7 +181,7 @@ public class Logic {
 
                 for (CalendarDate element : CalendarDate.values()) {
                     if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
-                        DaysAtMonth = element.getI();
+                        DaysAtMonth20 = element.getI();
                     }
 
                 }

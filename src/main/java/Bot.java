@@ -33,16 +33,21 @@ public class Bot extends TelegramLongPollingBot{
     @SneakyThrows
     private void handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
+        System.out.println("тут"+message.getText());
 
         logic.getCommand(callbackQuery.getData(), message.getText(),message.getChatId().toString());
-        if (message.getText().equals("Выберете число этого месяца:")){
+        if ((message.getText().equals("Выберете число этого месяца:"))){
+            execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите время и задачу в формате:" +
+                    "\n 99:99-ваша задача").build());
+        }
+        if ((message.getText().equals("Выберете число этого месяца и укажите повтор:"))){
             execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите итересующие вас время и задачу в формате" +
-                    "\n 66:66-раскрасить открытку").build());
+                    "\n 99:99-ваша задача-перриуд").build());
         }
 
-        if(message.getText().equals("Нажмите на то что хотите удалить:")){execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
-                "задача успешно удалена"
-        ).build());}
+        if(message.getText().equals("Нажмите на то что хотите удалить:")){
+            execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
+                "задача успешно удалена").build());}
     }
 
 
@@ -63,8 +68,74 @@ public class Bot extends TelegramLongPollingBot{
         }
 
         else {
+            String[] zz = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
             String ID = message.getChatId().toString();
             if (logic.database.checkUserCondition(ID)) {
+
+                System.out.println(logic.database.parseUserCondition(ID).get(0).split("%")[0].split(" ")[4].equals("месяца:"));
+
+               if(zz[0].split(" ").length >= 7) {
+                   //вот вить основа для тебя
+                   if (zz[0].split(" ")[7].equals("повтор:")) {
+                       String regex = "\\d{2}:\\d{2}-\\D+-\\d{1,2}";
+                       Pattern pattern = Pattern.compile(regex);
+                       Matcher matcher = pattern.matcher(message.getText());
+                       if (matcher.matches()) {
+                           System.out.println("все сделано правильно");
+                           String[] data = message.getText().split("-");
+                           System.out.println(data[0] + " " + data[1] + " " + data[2]);
+                           //время задача и число повторений
+                       } else {
+                           execute(SendMessage.builder()
+                                   .text("упс не вышло")
+                                   .chatId(message.getChatId().toString())
+                                   .build());
+                           logic.database.delUserCondition(message.getChatId().toString());
+                       }
+                   }
+               }else {
+
+
+                   if (zz[0].split(" ")[4].equals("месяца:")) {
+
+                       String regex = "\\d{1,2}:\\d{2}-.+";
+                       Pattern pattern = Pattern.compile(regex);
+                       Matcher matcher = pattern.matcher(message.getText());
+                       if (matcher.matches()) {
+                           try {
+                               String[] z = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+                               System.out.println(z[0] + " " + z[1]);
+                               Date date = new Date();
+                               Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+                               cal.setTime(date);
+                               int year = cal.get(Calendar.YEAR);
+                               int month = cal.get(Calendar.MONTH) + 1;
+                               System.out.println(month);
+                               String result = year + "-" + month + "-" + z[1];
+                               System.out.println(result);
+                               String messages = message.getText();
+                               execute(SendMessage.builder()
+                                       .text("Задача записана: " + messages)
+                                       .chatId(message.getChatId().toString())
+                                       .build());
+                               String[] TimeAndDo = messages.split("-");
+                               logic.database.delUserCondition(message.getChatId().toString());
+                               logic.writing(message.getChatId().toString(), result, TimeAndDo[0], TimeAndDo[1]);
+                           } catch (Throwable e) {
+                               System.out.println("видать ошибка в том что массив пустой"
+                               );
+                           }
+                       } else {
+                           execute(SendMessage.builder()
+                                   .text("усп что то не то ввели ведите заново или отмените \n/otmena")
+                                   .chatId(message.getChatId().toString())
+                                   .build());
+
+
+                       }
+                   }
+               }
+
                 if(logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity")){
                     String s = logic.getTimeFromPage(message.getText());
                     if (s.equals("Город не найден")){
@@ -109,53 +180,56 @@ public class Bot extends TelegramLongPollingBot{
                     }
                     logic.database.delUserCondition(message.getChatId().toString());
                 }
-                String[] zz = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+
+
+
                 if (zz[1].equals("выбираем город") && message.hasText()) {
                     execute(SendMessage.builder()
                             .text(logic.getTimeFromPage(message.getText()))
                             .chatId(message.getChatId().toString())
                             .build());
                     logic.database.delUserCondition(message.getChatId().toString());
-                } else {
-                    String regex = "\\d{1,2}:\\d{2}-.+";
-                    Pattern pattern = Pattern.compile(regex);
-                    Matcher matcher = pattern.matcher(message.getText());
-                    if (matcher.matches()) {
-                        try {
-                            String[] z = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
-                            System.out.println(z[0] + " " + z[1]);
-                            Date date = new Date();
-                            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-                            cal.setTime(date);
-                            int year = cal.get(Calendar.YEAR);
-                            int month = cal.get(Calendar.MONTH)+1;
-                            System.out.println(month);
-                            String result = year + "-" + month + "-" + z[1];
-                            System.out.println(result);
-                            String messages = message.getText();
-                            execute(SendMessage.builder()
-                                    .text("Задача записана: " + messages)
-                                    .chatId(message.getChatId().toString())
-                                    .build());
-                            String[] TimeAndDo = messages.split("-");
-                            logic.database.delUserCondition(message.getChatId().toString());
-                            logic.writing(message.getChatId().toString(), result, TimeAndDo[0], TimeAndDo[1]);
-                        } catch (Throwable e) {
-                            System.out.println("видать ошибка в том что массив пустой"
-                            );
-                        }
-                    } else {
-                        execute(SendMessage.builder()
-                                .text("усп что то не то ввели ведите заново или отмените \n/otmena")
-                                .chatId(message.getChatId().toString())
-                                .build());
+                }
 
-
-                    }
+//                    String regex = "\\d{1,2}:\\d{2}-.+";
+//                    Pattern pattern = Pattern.compile(regex);
+//                    Matcher matcher = pattern.matcher(message.getText());
+//                    if (matcher.matches()) {
+//                        try {
+//                            String[] z = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+//                            System.out.println(z[0] + " " + z[1]);
+//                            Date date = new Date();
+//                            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+//                            cal.setTime(date);
+//                            int year = cal.get(Calendar.YEAR);
+//                            int month = cal.get(Calendar.MONTH)+1;
+//                            System.out.println(month);
+//                            String result = year + "-" + month + "-" + z[1];
+//                            System.out.println(result);
+//                            String messages = message.getText();
+//                            execute(SendMessage.builder()
+//                                    .text("Задача записана: " + messages)
+//                                    .chatId(message.getChatId().toString())
+//                                    .build());
+//                            String[] TimeAndDo = messages.split("-");
+//                            logic.database.delUserCondition(message.getChatId().toString());
+//                            logic.writing(message.getChatId().toString(), result, TimeAndDo[0], TimeAndDo[1]);
+//                        } catch (Throwable e) {
+//                            System.out.println("видать ошибка в том что массив пустой"
+//                            );
+//                        }
+//                    } else {
+//                        execute(SendMessage.builder()
+//                                .text("усп что то не то ввели ведите заново или отмените \n/otmena")
+//                                .chatId(message.getChatId().toString())
+//                                .build());
+//
+//
+//                    }
 
                 }
 
-            }else {
+            else {
                 execute(SendMessage.builder()
                         .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
                         .chatId(message.getChatId().toString())
