@@ -2,7 +2,6 @@ import java.util.*;
 import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.DeleteChatStickerSet;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,6 +17,7 @@ import java.util.regex.Pattern;
 
 public class Bot extends TelegramLongPollingBot{
 
+    private static Logic logic = new Logic();
 
     @Override
     @SneakyThrows
@@ -34,7 +34,7 @@ public class Bot extends TelegramLongPollingBot{
     private void handleCallback(CallbackQuery callbackQuery) {
         Message message = callbackQuery.getMessage();
 
-        Logic.getCommand(callbackQuery.getData(), message.getText(),message.getChatId().toString());
+        logic.getCommand(callbackQuery.getData(), message.getText(),message.getChatId().toString());
         if (message.getText().equals("Выберете число этого месяца:")){
             execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите итересующие вас время и задачу в формате" +
                     "\n 66:66-раскрасить открытку").build());
@@ -57,22 +57,22 @@ public class Bot extends TelegramLongPollingBot{
             if(commandEntity.isPresent()){
                 String command =
                         message.getText().substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
-                sendToUser(Logic.switchMessage(command,message.getChatId().toString()),message.getChatId().toString());
+                sendToUser(logic.switchMessage(command,message.getChatId().toString()),message.getChatId().toString());
                 System.out.println("случилось непредвиденное");
             }
         }
 
         else {
             String ID = message.getChatId().toString();
-            if (Logic.database.checkUserCondition(ID)) {
-                if(Logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity")){
-                    String s = Logic.getTimeFromPage(message.getText());
+            if (logic.database.checkUserCondition(ID)) {
+                if(logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity")){
+                    String s = logic.getTimeFromPage(message.getText());
                     if (s.equals("Город не найден")){
                         execute(SendMessage.builder()
                                 .text("к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса или напишите его правильно")
                                 .chatId(message.getChatId().toString())
                                 .build());
-                        Logic.database.delUserCondition(message.getChatId().toString());
+                        logic.database.delUserCondition(message.getChatId().toString());
                     }
                     else {
                         String regex = "\\S{2} \\d{1,2}:\\d{1,2}";
@@ -80,22 +80,22 @@ public class Bot extends TelegramLongPollingBot{
                         Matcher matcher = pattern.matcher(s);
 
                         if(matcher.matches()) {
-                            if (Logic.database.checkUserCity(ID)){
-                                Logic.database.delUserCity(message.getChatId().toString());
+                            if (logic.database.checkUserCity(ID)){
+                                logic.database.delUserCity(message.getChatId().toString());
 
-                                Logic.database.addUserCity(message.getChatId().toString(), Logic.gettingTimeZone(s));
+                                logic.database.addUserCity(message.getChatId().toString(), logic.gettingTimeZone(s));
                                 execute(SendMessage.builder()
                                         .text("ваше текущее время: " + s)
                                         .chatId(ID)
                                         .build());
-                                Logic.database.delUserCondition(ID);
+                                logic.database.delUserCondition(ID);
                             }else {
-                                Logic.database.addUserCity(ID, Logic.gettingTimeZone(s));
+                                logic.database.addUserCity(ID, logic.gettingTimeZone(s));
                                 execute(SendMessage.builder()
                                         .text("ваше текущее время: " + s)
                                         .chatId(message.getChatId().toString())
                                         .build());
-                                Logic.database.delUserCondition(message.getChatId().toString());
+                                logic.database.delUserCondition(message.getChatId().toString());
                             }
                         }
                         else {
@@ -104,25 +104,25 @@ public class Bot extends TelegramLongPollingBot{
                                             "\n попробуйте указать город с вашим часовым поясом" )
                                     .chatId(message.getChatId().toString())
                                     .build());
-                            Logic.database.delUserCondition(message.getChatId().toString());
+                            logic.database.delUserCondition(message.getChatId().toString());
                         }
                     }
-                    Logic.database.delUserCondition(message.getChatId().toString());
+                    logic.database.delUserCondition(message.getChatId().toString());
                 }
-                String[] zz = Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+                String[] zz = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
                 if (zz[1].equals("выбираем город") && message.hasText()) {
                     execute(SendMessage.builder()
-                            .text(Logic.getTimeFromPage(message.getText()))
+                            .text(logic.getTimeFromPage(message.getText()))
                             .chatId(message.getChatId().toString())
                             .build());
-                    Logic.database.delUserCondition(message.getChatId().toString());
+                    logic.database.delUserCondition(message.getChatId().toString());
                 } else {
                     String regex = "\\d{1,2}:\\d{2}-.+";
                     Pattern pattern = Pattern.compile(regex);
                     Matcher matcher = pattern.matcher(message.getText());
                     if (matcher.matches()) {
                         try {
-                            String[] z = Logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+                            String[] z = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
                             System.out.println(z[0] + " " + z[1]);
                             Date date = new Date();
                             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
@@ -138,8 +138,8 @@ public class Bot extends TelegramLongPollingBot{
                                     .chatId(message.getChatId().toString())
                                     .build());
                             String[] TimeAndDo = messages.split("-");
-                            Logic.database.delUserCondition(message.getChatId().toString());
-                            Logic.writing(message.getChatId().toString(), result, TimeAndDo[0], TimeAndDo[1]);
+                            logic.database.delUserCondition(message.getChatId().toString());
+                            logic.writing(message.getChatId().toString(), result, TimeAndDo[0], TimeAndDo[1]);
                         } catch (Throwable e) {
                             System.out.println("видать ошибка в том что массив пустой"
                             );
@@ -156,7 +156,6 @@ public class Bot extends TelegramLongPollingBot{
                 }
 
             }else {
-                System.out.println("никуда не попал");
                 execute(SendMessage.builder()
                         .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
                         .chatId(message.getChatId().toString())
@@ -223,8 +222,8 @@ public class Bot extends TelegramLongPollingBot{
         Bot bot = new Bot();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
-        Logic.DateInizialition();
-        MultiThread newThread = new MultiThread(bot);
+        logic.DateInizialition();
+        MultiThread newThread = new MultiThread(bot,logic);
         newThread.start();
     }
 

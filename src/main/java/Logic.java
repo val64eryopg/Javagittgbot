@@ -14,6 +14,7 @@ public class Logic {
     public static Database database = new Database(GetDatabase.getUserName(),
             GetDatabase.getPassword(), GetDatabase.getUrl());
 
+
     public static void DateInizialition(){
         dateToInt.put("Пн", 1);
         dateToInt.put("Вт", 2);
@@ -23,6 +24,8 @@ public class Logic {
         dateToInt.put("Сб", 6);
         dateToInt.put("Вс", 7);
     }
+
+
 
     public static String getTimeFromPage(String city) {
 //        добываем время по запросу если нет города честно это говорим
@@ -48,7 +51,7 @@ public class Logic {
     }
 
 
-    public static void getCommand(String CommandOrText, String ListOfButtons, String chatId)
+    public  void getCommand(String CommandOrText, String ListOfButtons, String chatId)
             throws SQLException, ClassNotFoundException {
         if(!(database.checkUserCondition(chatId))){
             if (!(CommandOrText.equals("")) && !(ListOfButtons.equals(""))) {
@@ -60,7 +63,7 @@ public class Logic {
         }
     }
 
-    private static void switchListOfButtons(String CommandOrText, String ListOfButtons,
+    private void switchListOfButtons(String CommandOrText, String ListOfButtons,
         String chatId)  throws SQLException, ClassNotFoundException {
         switch (ListOfButtons) {
             case "Выберете число этого месяца:":
@@ -72,12 +75,18 @@ public class Logic {
                 String[] words = CommandOrText.split(" ");
                 database.delTask(chatId, words[0], words[1]);
                 break;
+            case "Выберете число этого месяца и укажите повтор:":
+                if (!(CommandOrText.equals("следущий месяц"))) {
+                    database.addUserCondition(chatId,ListOfButtons + "%" + CommandOrText);
+                }
+                break;
+
             default:
                 System.out.println("не попал");
         }
     }
 
-    public static int dateSubraction(String otherDate){
+    public  int dateSubraction(String otherDate){
         String localDate = getTimeFromPage("Екатеринбург");
         System.out.println(localDate.split(" ")[0]);
         int dayOfWeekIntLocal = dateToInt.get(localDate.split(" ")[0]);
@@ -92,7 +101,7 @@ public class Logic {
         return 0;
     }
 
-    public static String gettingTimeZone(String str){
+    public  String gettingTimeZone(String str){
         String[] localDate = dateFormat(getData()).split(" ");
         String[] otherDate = str.split(" ");
         Calendar timeInBeforeBreak = Calendar.getInstance();
@@ -115,7 +124,7 @@ public class Logic {
     }
 
 
-    public static ResultsCommand switchMessage(String command, String chatId) {
+    public ResultsCommand switchMessage(String command, String chatId) {
         //разбор команды
         ResultsCommand result = new ResultsCommand();
         String[] defolt = {"не то"};
@@ -152,6 +161,34 @@ public class Logic {
                 result.setMyArray(array);
 
                 return result;
+            case "/RegistrationWithRepeat":
+                ArrayList<String> Buttons20 = new ArrayList<String>();
+                String str20 = new String("");
+                int DaysAtMonth20 = 0;
+
+                for (CalendarDate element : CalendarDate.values()) {
+                    if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
+                        DaysAtMonth = element.getI();
+                    }
+
+                }
+
+                for (int i = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); i <= DaysAtMonth20 + 1; i++) {
+                    if (i <= DaysAtMonth20) {
+                        str20 = Integer.toString(i);
+                    } else {
+                        str20 = "следущий месяц";
+                    }
+                    Buttons20.add(str20);
+                }
+                String[] array20 = new String[Buttons20.size()];
+                for (int i = 0; i < Buttons20.size(); i++) {
+                    array20[i] = Buttons20.get(i);
+                }
+                result.setResult("Выберете число этого месяца и укажите повтор:");
+                result.setMyArray(array20);
+
+                return result;
             case "/start":
 
                 result.setResult(
@@ -161,7 +198,6 @@ public class Logic {
                                 "\n /MyTask " +
                                 "\n /LookAtWatch " +
                                 "\n /RegistrationForA_Month " +
-                                "\n /RegistrationForA_Week"+
                                 "\n Для того чтобы пользоваться этим ботом необходимо привязаться к городу дефолт Лондон" +
                                 "\n команда для привязки " +
                                 "\n /RegistrationOnCity");
@@ -253,18 +289,18 @@ public class Logic {
 
 
 
-    public static void writing(String chatId, String Data, String Time, String Task) throws SQLException, ClassNotFoundException {
+    public void writing(String chatId, String Data, String Time, String Task) throws SQLException, ClassNotFoundException {
         database.addTask(chatId, Data, Time, Task);
         System.out.println(database.checkTasks(chatId));
     }
 
-    public static String dateFormat(Date date) {
+    private static String dateFormat(Date date) {
         String pattern = "yyyy-MM-dd HH:mm";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         return dateFormat.format(date);
     }
 
-    public static boolean equalityDate(String timeZoneUser, Date dateNow, String dateFromDatabase) {
+    public  boolean equalityDate(String timeZoneUser, Date dateNow, String dateFromDatabase) {
         String[] dateArray = dateFormat(dateNow).split(" ");
         String[] dateFromDatabaseArray = dateFromDatabase.split(" ");
 
