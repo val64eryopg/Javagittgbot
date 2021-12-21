@@ -142,11 +142,7 @@ public class Logic {
         ResultsCommand result = new ResultsCommand();
         String[] defolt = {"не то"};
         switch (command) {
-
-
             case "/RegistrationForA_Month":
-
-
                 ArrayList<String> Buttons = new ArrayList<String>();
                 String str = new String("");
                 int DaysAtMonth = 0;
@@ -155,7 +151,6 @@ public class Logic {
                     if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
                         DaysAtMonth = element.getI();
                     }
-
                 }
 
                 for (int i = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); i <= DaysAtMonth + 1; i++) {
@@ -250,8 +245,7 @@ public class Logic {
                         return result;
 
                     }
-                } catch (ClassNotFoundException | SQLException ex) {
-                }
+                } catch (ClassNotFoundException | SQLException ex) {}
                 break;
             case "/MyTask":
 
