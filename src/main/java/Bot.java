@@ -54,214 +54,144 @@ public class Bot extends TelegramLongPollingBot{
 
 
     @SneakyThrows
-    public void handleMessage(Message message){
+    public void handleMessage(Message message) {
         //метод анализирует сообщение ли это или комана после чего отправляет ползователю соответсвующию команду
 
-        if(message.hasText() && message.hasEntities()){
+        if (message.hasText() && message.hasEntities()) {
             Optional<MessageEntity> commandEntity =
-                    message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
-            if(commandEntity.isPresent()){
+                message.getEntities().stream().filter(e -> "bot_command".equals(e.getType()))
+                    .findFirst();
+            if (commandEntity.isPresent()) {
                 String command =
-                        message.getText().substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
-                sendToUser(logic.switchMessage(command,message.getChatId().toString()),message.getChatId().toString());
+                    message.getText().substring(commandEntity.get().getOffset(),
+                        commandEntity.get().getLength());
+                sendToUser(logic.switchMessage(command, message.getChatId().toString()),
+                    message.getChatId().toString());
                 System.out.println("случилось непредвиденное");
             }
-        }
-
-        else {
-
-
+        } else {
             String ID = message.getChatId().toString();
             System.out.println(logic.database.checkUserCondition(ID));
 
-
             if (logic.database.checkUserCondition(ID)) {
 
-                String[] zz = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
-                System.out.println(zz[0]);
+                String[] userCond = logic.database.parseUserCondition(
+                    message.getChatId().toString()).get(0).split("%");
+                System.out.println(userCond[0]);
                 System.out.println(logic.database.parseUserCondition(ID).get(0).split(" ")[1]);
 
-                if(zz[0].split(" ").length == 7) {
-                   //вот вить основа для тебя
-                   if (zz[0].split(" ")[7].equals("повтор:")) {
-                       String regex = "\\d{2}:\\d{2}-\\D+-\\d{1,2}";
-                       Pattern pattern = Pattern.compile(regex);
-                       Matcher matcher = pattern.matcher(message.getText());
-                       if (matcher.matches()) {
-                           System.out.println("все сделано правильно");
-                           String[] data = message.getText().split("-");
+                if (userCond[0].split(" ").length >= 4) {
 
-                           System.out.println(data[0] + " " + data[1] + " " + data[2]);
-                           //время задача и число повторений
-                       }
-                       else {
-                           execute(SendMessage.builder()
-                                   .text("упс не вышло")
-                                   .chatId(message.getChatId().toString())
-                                   .build());
-                           logic.database.delUserCondition(message.getChatId().toString());
-                       }
+                    if (userCond[0].split(" ")[4].equals("месяца:")) {
 
-                   }
+                        String regex = "\\d{1,2}:\\d{2}-.+";
+                        Pattern pattern = Pattern.compile(regex);
+                        Matcher matcher = pattern.matcher(message.getText());
 
-               }
+                        if (matcher.matches()) {
+                            String[] splitMessege = message.getText().split("-");
+                            System.out.println(message.getText());
+                            try {
+                                String[] z = logic.database.parseUserCondition(
+                                    message.getChatId().toString()).get(0).split("%");
+                                System.out.println(z[0] + " " + z[1]);
+                                Date date = new Date();
+                                Calendar cal = Calendar.getInstance(
+                                    TimeZone.getTimeZone("Europe/Paris"));
+                                cal.setTime(date);
+                                int year = cal.get(Calendar.YEAR);
+                                int month = cal.get(Calendar.MONTH) + 1;
+                                System.out.println(month);
+                                String result = year + "-" + month + "-" + z[1];
+                                System.out.println(result);
+                                String messages = message.getText();
+                                execute(SendMessage.builder()
+                                    .text("Задача записана: " + messages)
+                                    .chatId(message.getChatId().toString())
+                                    .build());
+                                String[] timeAndDo = messages.split("-");
+                                logic.database.delUserCondition(message.getChatId().toString());
+                                if (splitMessege.length == 2) {
+                                    logic.writing(message.getChatId().toString(), result,
+                                        timeAndDo[0], timeAndDo[1], "0");
+                                } else if (splitMessege.length == 3) {
+                                    System.out.println(splitMessege[2]);
+                                    logic.writing(message.getChatId().toString(), result,
+                                        timeAndDo[0], timeAndDo[1], splitMessege[2]);
+                                }
+                            } catch (Throwable e) {
+                                System.out.println("видать ошибка в том что массив пустой");
+                            }
+                        }
+                    } else {
+                        execute(SendMessage.builder()
+                            .text("усп что то не то ввели ведите заново или отмените \n/otmena")
+                            .chatId(message.getChatId().toString())
+                            .build());
+                    }
+                }
 
-               else {
-
-                   if (zz[0].split(" ").length==4){
-
-                   if (zz[0].split(" ")[4].equals("месяца:")) {
-
-                       String regex = "\\d{1,2}:\\d{2}-.+";
-                       Pattern pattern = Pattern.compile(regex);
-                       Matcher matcher = pattern.matcher(message.getText());
-
-                       if (matcher.matches()) {
-                           String[] splitMessege = message.getText().split("-");
-                           try {
-                               String[] z = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
-                               System.out.println(z[0] + " " + z[1]);
-                               Date date = new Date();
-                               Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-                               cal.setTime(date);
-                               int year = cal.get(Calendar.YEAR);
-                               int month = cal.get(Calendar.MONTH) + 1;
-                               System.out.println(month);
-                               String result = year + "-" + month + "-" + z[1];
-                               System.out.println(result);
-                               String messages = message.getText();
-                               execute(SendMessage.builder()
-                                       .text("Задача записана: " + messages)
-                                       .chatId(message.getChatId().toString())
-                                       .build());
-                               String[] timeAndDo = messages.split("-");
-                               logic.database.delUserCondition(message.getChatId().toString());
-                               if (splitMessege.length == 2) {
-//                                   logic.writing(message.getChatId().toString(), result, timeAndDo[0], timeAndDo[1], 0);
-
-                               }
-                               else if (splitMessege.length == 3) {
-                                   System.out.println(splitMessege[2]);
-                                   //logic.writing(message.getChatId().toString(), result, timeAndDo[0], timeAndDo[1], splitMessege[2]);
-                               }
-                           } catch (Throwable e) {
-                               System.out.println("видать ошибка в том что массив пустой"
-                               );
-                           }
-                       }
-                       } else {
-                           execute(SendMessage.builder()
-                                   .text("усп что то не то ввели ведите заново или отмените \n/otmena")
-                                   .chatId(message.getChatId().toString())
-                                   .build());
-
-
-                       }
-                   }
-               }
-
-                if(logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity%")){
+                if (logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals(
+                    "RegistrationOnCity%")) {
                     System.out.println(1);
                     String s = logic.getTimeFromPage(message.getText());
-                    if (s.equals("Город не найден")){
+                    if (s.equals("Город не найден")) {
                         execute(SendMessage.builder()
-                                .text("к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса или напишите его правильно")
-                                .chatId(message.getChatId().toString())
-                                .build());
+                            .text(
+                                "к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса или напишите его правильно")
+                            .chatId(message.getChatId().toString())
+                            .build());
                         logic.database.delUserCondition(message.getChatId().toString());
-                    }
-                    else {
+                    } else {
                         String regex = "\\S{2} \\d{1,2}:\\d{1,2}";
                         Pattern pattern = Pattern.compile(regex);
                         Matcher matcher = pattern.matcher(s);
 
-                        if(matcher.matches()) {
-                            if (logic.database.checkUserCity(ID)){
+                        if (matcher.matches()) {
+                            if (logic.database.checkUserCity(ID)) {
                                 logic.database.delUserCity(message.getChatId().toString());
 
-                                logic.database.addUserCity(message.getChatId().toString(), logic.gettingTimeZone(s));
+                                logic.database.addUserCity(message.getChatId().toString(),
+                                    logic.gettingTimeZone(s));
                                 execute(SendMessage.builder()
-                                        .text("ваше текущее время: " + s)
-                                        .chatId(ID)
-                                        .build());
+                                    .text("ваше текущее время: " + s)
+                                    .chatId(ID)
+                                    .build());
                                 logic.database.delUserCondition(ID);
-                            }else {
+                            } else {
                                 logic.database.addUserCity(ID, logic.gettingTimeZone(s));
                                 execute(SendMessage.builder()
-                                        .text("ваше текущее время: " + s)
-                                        .chatId(message.getChatId().toString())
-                                        .build());
-                                logic.database.delUserCondition(message.getChatId().toString());
-                            }
-                        }
-                        else {
-                            execute(SendMessage.builder()
-                                    .text("Ваш город пока не подключен" +
-                                            "\n попробуйте указать город с вашим часовым поясом" )
+                                    .text("ваше текущее время: " + s)
                                     .chatId(message.getChatId().toString())
                                     .build());
+                                logic.database.delUserCondition(message.getChatId().toString());
+                            }
+                        } else {
+                            execute(SendMessage.builder()
+                                .text("Ваш город пока не подключен" +
+                                    "\n попробуйте указать город с вашим часовым поясом")
+                                .chatId(message.getChatId().toString())
+                                .build());
                             logic.database.delUserCondition(message.getChatId().toString());
                         }
                     }
                     logic.database.delUserCondition(message.getChatId().toString());
                 }
-
-
-
-                if (zz[1].equals("выбираем город") && message.hasText()) {
+                if (userCond[1].equals("выбираем город") && message.hasText()) {
                     execute(SendMessage.builder()
-                            .text(logic.getTimeFromPage(message.getText()))
-                            .chatId(message.getChatId().toString())
-                            .build());
-                    logic.database.delUserCondition(message.getChatId().toString());
-                }
-
-//                    String regex = "\\d{1,2}:\\d{2}-.+";
-//                    Pattern pattern = Pattern.compile(regex);
-//                    Matcher matcher = pattern.matcher(message.getText());
-//                    if (matcher.matches()) {
-//                        try {
-//                            String[] z = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
-//                            System.out.println(z[0] + " " + z[1]);
-//                            Date date = new Date();
-//                            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-//                            cal.setTime(date);
-//                            int year = cal.get(Calendar.YEAR);
-//                            int month = cal.get(Calendar.MONTH)+1;
-//                            System.out.println(month);
-//                            String result = year + "-" + month + "-" + z[1];
-//                            System.out.println(result);
-//                            String messages = message.getText();
-//                            execute(SendMessage.builder()
-//                                    .text("Задача записана: " + messages)
-//                                    .chatId(message.getChatId().toString())
-//                                    .build());
-//                            String[] TimeAndDo = messages.split("-");
-//                            logic.database.delUserCondition(message.getChatId().toString());
-//                            logic.writing(message.getChatId().toString(), result, TimeAndDo[0], TimeAndDo[1]);
-//                        } catch (Throwable e) {
-//                            System.out.println("видать ошибка в том что массив пустой"
-//                            );
-//                        }
-//                    } else {
-//                        execute(SendMessage.builder()
-//                                .text("усп что то не то ввели ведите заново или отмените \n/otmena")
-//                                .chatId(message.getChatId().toString())
-//                                .build());
-//
-//
-//                    }
-
-                }
-
-            else {
-                execute(SendMessage.builder()
-                        .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
+                        .text(logic.getTimeFromPage(message.getText()))
                         .chatId(message.getChatId().toString())
                         .build());
+                    logic.database.delUserCondition(message.getChatId().toString());
+                }
+            } else {
+                execute(SendMessage.builder()
+                    .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
+                    .chatId(message.getChatId().toString())
+                    .build());
             }
         }
-}
+    }
 
 
 

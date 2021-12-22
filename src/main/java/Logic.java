@@ -292,8 +292,7 @@ public class Logic {
                                     "\n /DeleteTask" +
                                     " \n /MyTask" +
                                     " \n /LookAtWatch" +
-                                    " \n /RegistrationForA_Week" +
-                                    "\n/RegistrationWithRepeat");
+                                    " \n /RegistrationForA_Month");
 
                     result.setMyArray(defolt);
                     return result;
@@ -305,20 +304,66 @@ public class Logic {
                                     " /DeleteTask " +
                                     "\n /MyTask " +
                                     "\n /LookAtWatch " +
-                                    "\n /RegistrationForA_Month" +
-                                    "\n/RegistrationWithRepeat ");
+                                    "\n /RegistrationForA_Month");
                     result.setMyArray(defolt);
                     return result;
             }
-
         return result;
-
     }
 
 
+    public void deleteTask(String chatId, String data, String time)
+        throws SQLException, ClassNotFoundException {
+        // перезаписывает просроченные задачи и корректирует повторения задач
+        ArrayList<String> task = database.parseTask(chatId, data, time);
+        database.addOverdueTask(chatId, data, time, "задача", "-1");
+        String rep = task.get(0).split(" ")[3];
+        System.out.println(rep.equals("0"));
 
-    public void writing(String chatId, String Data, String Time, String Task) throws SQLException, ClassNotFoundException {
-        database.addTask(chatId, Data, Time, Task, "");
+        System.out.println(chatId+"%"+data+"%"+time);
+        if (rep.equals("0")){
+            System.out.println(chatId+"%"+data+"%"+time);
+            if (database.delTask(chatId, data, time))
+                System.out.println("Удаление прошло успешно");
+            else
+                System.out.println("Задача не удалена");
+        }
+        else{
+            if (database.delTask(chatId, data, time))
+                System.out.println("Удаление прошло успешно");
+            else
+                System.out.println("Задача не удалена");
+
+            data = changeDate(task.get(0).split(" ")[0], rep);
+            writing(chatId, data, time, task.get(0).split(" ")[2], rep);
+            System.out.println(chatId+"%"+data+"%"+time);
+        }
+        System.out.println("DeleteTask отработал");
+    }
+
+    public String changeDate(String data, String repeat){
+        // считает новую дату в зависимости от того, какое повторение было выбрано
+        Calendar time = Calendar.getInstance();
+        time.clear();
+        time.set(Calendar.YEAR, Integer.parseInt(data.split("-")[0]));
+        time.set(Calendar.MONTH, Integer.parseInt(data.split("-")[1]) - 1);
+        time.set(Calendar.DAY_OF_MONTH, Integer.parseInt(data.split("-")[2]));
+        System.out.println(time.getTime());
+
+        if (repeat.equals("1"))
+            time.setTimeInMillis(time.getTimeInMillis() + 1000*60*60*24);
+        else if (repeat.equals("2"))
+            time.setTimeInMillis(time.getTimeInMillis() + 1000*60*60*24*7);
+
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        Date date = time.getTime();
+        return dateFormat.format(date);
+
+    }
+
+    public void writing(String chatId, String data, String time, String task, String repeats) throws SQLException, ClassNotFoundException {
+        database.addTask(chatId, data, time, task, repeats);
         System.out.println(database.checkTasks(chatId));
     }
     private static String dateFormat(Date date) {
@@ -340,9 +385,9 @@ public class Logic {
         int localHour = Integer.parseInt(dateArray[1].split(":")[0]);
         int localMin = Integer.parseInt(dateArray[1].split(":")[1]);
 
-        int userDay = Integer.parseInt(dateFromDatabaseArray[1].split("-")[2]);
-        int userHour = Integer.parseInt(dateFromDatabaseArray[2].split(":")[0]);
-        int userMin = Integer.parseInt(dateFromDatabaseArray[2].split(":")[1]);
+        int userDay = Integer.parseInt(dateFromDatabaseArray[0].split("-")[2]);
+        int userHour = Integer.parseInt(dateFromDatabaseArray[1].split(":")[0]);
+        int userMin = Integer.parseInt(dateFromDatabaseArray[1].split(":")[1]);
 
 
         Calendar localTime = Calendar.getInstance();

@@ -46,8 +46,65 @@ class Database {
     return true;
   }
 
-  boolean addTask(String chat_id, String date_task, String time_task, String task, String repeats) throws SQLException, ClassNotFoundException {
+  ArrayList<String> parseTask(String chat_id, String date_task, String time_task) throws SQLException, ClassNotFoundException{
+    ArrayList<String> result = new ArrayList<String>();
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+
+      ResultSet resultSet = statement.executeQuery(
+          "SELECT * from tasks where chat_id = '"+chat_id+"' AND date_task = '"+date_task+"' AND time_task = '"+time_task+"'");
+
+      while (resultSet.next()) {
+        result.add(resultSet.getString(3) + " " +
+            resultSet.getString(4) + " " +
+            resultSet.getString(5) + " "+
+            resultSet.getString(6));
+      }
+    } catch (Exception e){
+      e.printStackTrace();
+    }
+    return result;
+  }
+  boolean addOverdueTask(String chat_id, String date_task, String time_task, String task, String repeats) throws SQLException, ClassNotFoundException {
     // Method created for add task to database
+
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      statement.executeUpdate(
+          "INSERT INTO overdue_tasks(chat_id, date_task, time_task, task, repeats) value ('"+chat_id+"', '"+date_task+"','"+time_task+"', '"+task+"', '"+repeats+"')");
+    } catch (Exception e){
+      System.out.println(e);
+      return false;
+    }
+
+    return true;
+  }
+
+  ArrayList<String> checkOverdueTasks(String chat_id) throws ClassNotFoundException, SQLException {
+    // Method use lastname only
+    ArrayList<String> result = new ArrayList<String>() {
+    };
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+
+      ResultSet resultSet = statement.executeQuery(
+          "SELECT * from overdue_tasks where chat_id = '" + chat_id + "'"); // return table tasks
+
+      while (resultSet.next()) {
+        result.add(resultSet.getString(3) + " " +
+            resultSet.getString(4) + " " +
+            resultSet.getString(5) + " " +
+            resultSet.getString(6));
+      }
+    } catch (Exception e) {
+      return null;
+    }
+    return result;
+  }
+
+    boolean addTask(String chat_id, String date_task, String time_task, String task, String repeats) throws SQLException, ClassNotFoundException {
+    // Method created for add task to database
+
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
       statement.executeUpdate(
@@ -72,7 +129,8 @@ class Database {
       while (resultSet.next()) {
         result.add(resultSet.getString(3) + " " +
                 resultSet.getString(4) + " " +
-                resultSet.getString(5));
+                resultSet.getString(5) + " "+
+                resultSet.getString(6));
       }
     } catch (Exception e){
       return null;
@@ -90,9 +148,9 @@ class Database {
 
       while (resultSet.next()) {
 
-        result.add(resultSet.getString(2) + " " +
-            resultSet.getString(3) + " " +
-            resultSet.getString(4) + " " +
+        result.add(resultSet.getString(2) + "%" +
+            resultSet.getString(3) + "%" +
+            resultSet.getString(4) + "%" +
             resultSet.getString(5));
       }
 

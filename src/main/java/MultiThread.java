@@ -10,17 +10,16 @@ public class MultiThread extends Thread {
         this.logic = logic;
     }
 
-
-
     @SneakyThrows
     public void run() {
 
         while (true) {
-            sleep(60000);
             for (String s : logic.database.returnTasks()) {
 
-                String chatId = s.split(" ")[0];
-                String task = s.split(" ")[3];
+                String chatId = s.split("%")[0];
+                String date = s.split("%")[1];
+                String time = s.split("%")[2];
+                String task = s.split("%")[3];
                 String timezone = "0";
 
                 if (logic.database.checkUserCity(chatId))
@@ -29,16 +28,19 @@ public class MultiThread extends Thread {
                 if (logic.equalityDate(
                                         timezone, // не у каждого пользователя указано timezone
                                         logic.getData(),
-                                        s)) {
+                                        date + " " + time)) {
                     System.out.println(1);
                     bot.execute(
                             SendMessage.builder()
-                                    .text(task + "Прошел срок выполнения вашей задачи")
+                                    .text(date + "\t" + time + "\t" + task + "\nПрошел срок выполнения вашей задачи")
                                     .chatId(chatId)
                                     .build());
 
+                    logic.deleteTask(chatId, date, time);
+                    System.out.println("все просроченныые задачи удалены");
                 }
             }
+            sleep(60000);
         }
     }
 }
