@@ -146,8 +146,6 @@ public class Logic {
 
 
                 case "/RegistrationForA_Month":
-
-
                     ArrayList<String> Buttons = new ArrayList<String>();
                     String str = new String("");
                     int DaysAtMonth = 0;
