@@ -42,7 +42,7 @@ public class Bot extends TelegramLongPollingBot{
         }
         if ((message.getText().equals("Выберете число этого месяца и укажите повтор:"))){
             execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите итересующие вас время и задачу в формате" +
-                    "\n 99:99-ваша задача-перриуд").build());
+                    "\n 99:99-ваша задача-период").build());
         }
 
         if(message.getText().equals("Нажмите на то что хотите удалить:")){
@@ -56,7 +56,7 @@ public class Bot extends TelegramLongPollingBot{
     public void handleMessage(Message message){
         //метод анализирует сообщение ли это или комана после чего отправляет ползователю соответсвующию команду
 
-        if(message.hasText() && message.hasEntities()){
+        if (message.hasText() && message.hasEntities()){
             Optional<MessageEntity> commandEntity =
                     message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
             if(commandEntity.isPresent()){
@@ -130,14 +130,13 @@ public class Bot extends TelegramLongPollingBot{
                                    .text("усп что то не то ввели ведите заново или отмените \n/otmena")
                                    .chatId(message.getChatId().toString())
                                    .build());
-
-
                        }
                    }
                }
 
-                if(logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity")){
+               if (logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity")){
                     String s = logic.getTimeFromPage(message.getText());
+                    System.out.println(s);
                     if (s.equals("Город не найден")){
                         execute(SendMessage.builder()
                                 .text("к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса или напишите его правильно")

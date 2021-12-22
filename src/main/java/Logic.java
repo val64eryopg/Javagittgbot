@@ -178,7 +178,6 @@ public class Logic {
                     if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
                         DaysAtMonth20 = element.getI();
                     }
-
                 }
 
                 for (int i = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); i <= DaysAtMonth20 + 1; i++) {
@@ -275,8 +274,7 @@ public class Logic {
                                 "\n /DeleteTask" +
                                 " \n /MyTask" +
                                 " \n /LookAtWatch" +
-                                " \n /RegistrationForA_Week");
-
+                                " \n /RegistrationForA_ Month");
                 result.setMyArray(defolt);
                 return result;
             default:

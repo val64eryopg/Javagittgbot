@@ -21,8 +21,13 @@ public class MultiThread extends Thread {
 
                 String chatId = s.split(" ")[0];
                 String task = s.split(" ")[3];
+                String timezone = "0";
+
+                if (logic.database.checkUserCity(chatId))
+                    timezone = logic.database.parseUserCity(chatId).get(0).split( " ")[1];
+
                 if (logic.equalityDate(
-                                        logic.database.parseUserCity(chatId).get(0).split( " ")[1], // не укаждого пользователя указано timezone
+                                        timezone, // не у каждого пользователя указано timezone
                                         logic.getData(),
                                         s)) {
                     System.out.println(1);
