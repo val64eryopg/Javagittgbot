@@ -287,7 +287,6 @@ public class Logic {
                     break;
 
                 case "/HELP":
-
                     result.setResult(
                             "Список доступных команд: " +
                                     "\n /DeleteTask" +
@@ -319,10 +318,9 @@ public class Logic {
 
 
     public void writing(String chatId, String Data, String Time, String Task) throws SQLException, ClassNotFoundException {
-        database.addTask(chatId, Data, Time, Task);
+        database.addTask(chatId, Data, Time, Task, "");
         System.out.println(database.checkTasks(chatId));
     }
-
     private static String dateFormat(Date date) {
         String pattern = "yyyy-MM-dd HH:mm";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);

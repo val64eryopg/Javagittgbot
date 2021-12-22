@@ -46,11 +46,12 @@ class Database {
     return true;
   }
 
-  boolean addTask(String chat_id, String date_task, String time_task, String task) throws SQLException, ClassNotFoundException {
+  boolean addTask(String chat_id, String date_task, String time_task, String task, String repeats) throws SQLException, ClassNotFoundException {
     // Method created for add task to database
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
-      statement.executeUpdate("INSERT INTO tasks(chat_id, date_task, time_task, task) value ('"+chat_id+"', '"+date_task+"','"+time_task+"', '"+task+"')");
+      statement.executeUpdate(
+          "INSERT INTO tasks(chat_id, date_task, time_task, task, repeats) value ('"+chat_id+"', '"+date_task+"','"+time_task+"', '"+task+"', '"+repeats+"')");
     } catch (Exception e){
       System.out.println(e);
       return false;

@@ -132,9 +132,12 @@ public class Bot extends TelegramLongPollingBot{
                                        .text("Задача записана: " + messages)
                                        .chatId(message.getChatId().toString())
                                        .build());
-                               String[] TimeAndDo = messages.split("-");
+                               String[] timeAndDo = messages.split("-");
                                logic.database.delUserCondition(message.getChatId().toString());
-                               logic.writing(message.getChatId().toString(), result, TimeAndDo[0], TimeAndDo[1]);
+                               if (splitMessege.legth == 2)
+                                   logic.writing(message.getChatId().toString(), result, timeAndDo[0], timeAndDo[1], 0);
+                               else if splitMessege.legth == 3
+                                    logic.writing(message.getChatId().toString(), result, timeAndDo[0], timeAndDo[1], splitMesege[2]);
                            } catch (Throwable e) {
                                System.out.println("видать ошибка в том что массив пустой"
                                );
