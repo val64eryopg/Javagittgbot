@@ -198,7 +198,6 @@ public class Bot extends TelegramLongPollingBot{
 
 
                 if (zz[1].equals("выбираем город") && message.hasText()) {
-                    System.out.println("1");
                     execute(SendMessage.builder()
                             .text(logic.getTimeFromPage(message.getText()))
                             .chatId(message.getChatId().toString())
