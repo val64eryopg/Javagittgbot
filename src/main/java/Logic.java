@@ -141,163 +141,172 @@ public class Logic {
         //разбор команды
         ResultsCommand result = new ResultsCommand();
         String[] defolt = {"не то"};
-        switch (command) {
+
+            switch (command) {
 
 
-            case "/RegistrationForA_Month":
+                case "/RegistrationForA_Month":
 
 
-                ArrayList<String> Buttons = new ArrayList<String>();
-                String str = new String("");
-                int DaysAtMonth = 0;
+                    ArrayList<String> Buttons = new ArrayList<String>();
+                    String str = new String("");
+                    int DaysAtMonth = 0;
 
-                for (CalendarDate element : CalendarDate.values()) {
-                    if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
-                        DaysAtMonth = element.getI();
-                    }
-
-                }
-
-                for (int i = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); i <= DaysAtMonth + 1; i++) {
-                    if (i <= DaysAtMonth) {
-                        str = Integer.toString(i);
-                    } else {
-                        str = "следущий месяц";
-                    }
-                    Buttons.add(str);
-                }
-                String[] array = new String[Buttons.size()];
-                for (int i = 0; i < Buttons.size(); i++) {
-                    array[i] = Buttons.get(i);
-                }
-                result.setResult("Выберете число этого месяца:");
-                result.setMyArray(array);
-
-                return result;
-            case "/RegistrationWithRepeat":
-                ArrayList<String> Buttons20 = new ArrayList<String>();
-                String str20 = new String("");
-                int DaysAtMonth20 = 0;
-
-                for (CalendarDate element : CalendarDate.values()) {
-                    if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
-                        DaysAtMonth20 = element.getI();
-                    }
-
-                }
-
-                for (int i = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); i <= DaysAtMonth20 + 1; i++) {
-                    if (i <= DaysAtMonth20) {
-                        str20 = Integer.toString(i);
-                    } else {
-                        str20 = "следущий месяц";
-                    }
-                    Buttons20.add(str20);
-                }
-                String[] array20 = new String[Buttons20.size()];
-                for (int i = 0; i < Buttons20.size(); i++) {
-                    array20[i] = Buttons20.get(i);
-                }
-                result.setResult("Выберете число этого месяца и укажите повтор:");
-                result.setMyArray(array20);
-
-                return result;
-            case "/start":
-
-                result.setResult(
-                        "Доброго времени, суток наш бот записывает и отображает ваши задачи" +
-                                "\n Вот список доступных команд такой: " +
-                                "\n /DeleteTask " +
-                                "\n /MyTask " +
-                                "\n /LookAtWatch " +
-                                "\n /RegistrationForA_Month " +
-                                "\n Для того чтобы пользоваться этим ботом необходимо привязаться к городу дефолт Лондон" +
-                                "\n команда для привязки " +
-                                "\n /RegistrationOnCity");
-
-                result.setMyArray(defolt);
-                return result;
-            case "/LookAtWatch":
-
-                result.setResult("Напишите город:");
-                database.addUserCondition(chatId, "/LookAtWatch%выбираем город");
-                result.setMyArray(defolt);
-                return result;
-            case "/otmena":
-                database.delUserCondition(chatId);
-                break;
-            case "/RegistrationOnCity":
-                result.setMyArray(defolt);
-                result.setResult("Напишите ваш город");
-                database.addUserCondition(chatId,"RegistrationOnCity");
-                return result;
-
-            case "/DeleteTask":
-
-                result.setResult("Нажмите на то что хотите удалить:");
-                try {
-                    ArrayList<String> check = database.checkTasks(chatId);
-                    if (check.size() != 0) {
-                        String[] array111 = new String[check.size()];
-                        for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
-                        result.setMyArray(array111);
-                        return result;
-                    } else {
-                        check.add("нет данных");
-                        String[] array111 = new String[check.size()];
-                        for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
-                        result.setMyArray(array111);
-                        return result;
+                    for (CalendarDate element : CalendarDate.values()) {
+                        if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
+                            DaysAtMonth = element.getI();
+                        }
 
                     }
-                } catch (ClassNotFoundException | SQLException ex) {
-                }
-                break;
-            case "/MyTask":
 
-                result.setResult("Вот список ваших задач:");
-                try {
-                    ArrayList<String> check = database.checkTasks(chatId);
-                    if (check.size() != 0) {
-                        String[] array111 = new String[check.size()];
-                        for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
-                        result.setMyArray(array111);
-                    } else {
-                        check.add("нет данных");
-                        String[] array111 = new String[check.size()];
-                        for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
-                        result.setMyArray(array111);
-                        return result;
+                    for (int i = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); i <= DaysAtMonth + 1; i++) {
+                        if (i <= DaysAtMonth) {
+                            str = Integer.toString(i);
+                        } else {
+                            str = "следущий месяц";
+                        }
+                        Buttons.add(str);
                     }
-                } catch (ClassNotFoundException | SQLException ex) {
-                    ex.printStackTrace();
-                }
-                break;
+                    String[] array = new String[Buttons.size()];
+                    for (int i = 0; i < Buttons.size(); i++) {
+                        array[i] = Buttons.get(i);
+                    }
+                    result.setResult("Выберете число этого месяца:");
+                    result.setMyArray(array);
 
-            case "/HELP":
+                    return result;
+                case "/RegistrationWithRepeat":
+                    ArrayList<String> Buttons20 = new ArrayList<String>();
+                    String str20 = new String("");
+                    int DaysAtMonth20 = 0;
 
-                result.setResult(
-                        "Список доступных команд: " +
-                                "\n /DeleteTask" +
-                                " \n /MyTask" +
-                                " \n /LookAtWatch" +
-                                " \n /RegistrationForA_Week");
+                    for (CalendarDate element : CalendarDate.values()) {
+                        if (Calendar.getInstance().get(Calendar.MONTH) == element.ordinal()) {
+                            DaysAtMonth20 = element.getI();
+                        }
 
-                result.setMyArray(defolt);
-                return result;
-            default:
-                result.setResult(
-                    "Команда не распознана." +
-                            "\nСписок доступных команд:" +
-                            " \n /HELP \n" +
-                            " /DeleteTask " +
-                            "\n /MyTask " +
-                            "\n /LookAtWatch " +
-                            "\n /RegistrationForA_Month ");
-                result.setMyArray(defolt);
-                return result;
-        }
+                    }
+
+                    for (int i = Calendar.getInstance().get(Calendar.DAY_OF_MONTH); i <= DaysAtMonth20 + 1; i++) {
+                        if (i <= DaysAtMonth20) {
+                            str20 = Integer.toString(i);
+                        } else {
+                            str20 = "следущий месяц";
+                        }
+                        Buttons20.add(str20);
+                    }
+                    String[] array20 = new String[Buttons20.size()];
+                    for (int i = 0; i < Buttons20.size(); i++) {
+                        array20[i] = Buttons20.get(i);
+                    }
+                    result.setResult("Выберете число этого месяца и укажите повтор:");
+                    result.setMyArray(array20);
+
+                    return result;
+                case "/start":
+
+                    result.setResult(
+                            "Доброго времени, суток наш бот записывает и отображает ваши задачи" +
+                                    "\n Вот список доступных команд такой: " +
+                                    "\n /DeleteTask " +
+                                    "\n /MyTask " +
+                                    "\n /LookAtWatch " +
+                                    "\n /RegistrationForA_Month " +
+                                    "\n Для того чтобы пользоваться этим ботом необходимо привязаться к городу дефолт Лондон" +
+                                    "\n команда для привязки " +
+                                    "\n /RegistrationOnCity");
+
+                    result.setMyArray(defolt);
+                    return result;
+                case "/LookAtWatch":
+
+                    result.setResult("Напишите город:");
+                    database.addUserCondition(chatId, "/LookAtWatch%выбираем город");
+                    result.setMyArray(defolt);
+                    return result;
+                case "/otmena":
+                    database.delUserCondition(chatId);
+                    break;
+                case "/RegistrationOnCity":
+                    result.setMyArray(defolt);
+                    result.setResult("Напишите ваш город");
+                    if (database.checkUserCondition(chatId)) {
+                        database.delUserCondition(chatId);
+                        database.addUserCondition(chatId, "RegistrationOnCity%");
+                    }else{
+                        database.addUserCondition(chatId, "RegistrationOnCity%");
+                    }
+
+                    return result;
+
+                case "/DeleteTask":
+
+                    result.setResult("Нажмите на то что хотите удалить:");
+                    try {
+                        ArrayList<String> check = database.checkTasks(chatId);
+                        if (check.size() != 0) {
+                            String[] array111 = new String[check.size()];
+                            for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                            result.setMyArray(array111);
+                            return result;
+                        } else {
+                            check.add("нет данных");
+                            String[] array111 = new String[check.size()];
+                            for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                            result.setMyArray(array111);
+                            return result;
+
+                        }
+                    } catch (ClassNotFoundException | SQLException ex) {
+                    }
+                    break;
+                case "/MyTask":
+
+                    result.setResult("Вот список ваших задач:");
+                    try {
+                        ArrayList<String> check = database.checkTasks(chatId);
+                        if (check.size() != 0) {
+                            String[] array111 = new String[check.size()];
+                            for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                            result.setMyArray(array111);
+                        } else {
+                            check.add("нет данных");
+                            String[] array111 = new String[check.size()];
+                            for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                            result.setMyArray(array111);
+                            return result;
+                        }
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+
+                case "/HELP":
+
+                    result.setResult(
+                            "Список доступных команд: " +
+                                    "\n /DeleteTask" +
+                                    " \n /MyTask" +
+                                    " \n /LookAtWatch" +
+                                    " \n /RegistrationForA_Week");
+
+                    result.setMyArray(defolt);
+                    return result;
+                default:
+                    result.setResult(
+                            "Команда не распознана." +
+                                    "\nСписок доступных команд:" +
+                                    " \n /HELP \n" +
+                                    " /DeleteTask " +
+                                    "\n /MyTask " +
+                                    "\n /LookAtWatch " +
+                                    "\n /RegistrationForA_Month ");
+                    result.setMyArray(defolt);
+                    return result;
+            }
+
         return result;
+
     }
 
 

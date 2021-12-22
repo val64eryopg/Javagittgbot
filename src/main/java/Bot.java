@@ -68,13 +68,19 @@ public class Bot extends TelegramLongPollingBot{
         }
 
         else {
-            String[] zz = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+
+
             String ID = message.getChatId().toString();
+            System.out.println(logic.database.checkUserCondition(ID));
+
+
             if (logic.database.checkUserCondition(ID)) {
 
-                System.out.println(logic.database.parseUserCondition(ID).get(0).split("%")[0].split(" ")[4].equals("месяца:"));
+                String[] zz = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
+                System.out.println(zz[0]);
+                System.out.println(logic.database.parseUserCondition(ID).get(0).split(" ")[1]);
 
-               if(zz[0].split(" ").length >= 7) {
+                if(zz[0].split(" ").length == 7) {
                    //вот вить основа для тебя
                    if (zz[0].split(" ")[7].equals("повтор:")) {
                        String regex = "\\d{2}:\\d{2}-\\D+-\\d{1,2}";
@@ -85,16 +91,22 @@ public class Bot extends TelegramLongPollingBot{
                            String[] data = message.getText().split("-");
                            System.out.println(data[0] + " " + data[1] + " " + data[2]);
                            //время задача и число повторений
-                       } else {
+                       }
+                       else {
                            execute(SendMessage.builder()
                                    .text("упс не вышло")
                                    .chatId(message.getChatId().toString())
                                    .build());
                            logic.database.delUserCondition(message.getChatId().toString());
                        }
-                   }
-               }else {
 
+                   }
+
+               }
+
+               else {
+
+                   if (zz[0].split(" ").length==4){
 
                    if (zz[0].split(" ")[4].equals("месяца:")) {
 
@@ -125,6 +137,7 @@ public class Bot extends TelegramLongPollingBot{
                                System.out.println("видать ошибка в том что массив пустой"
                                );
                            }
+                       }
                        } else {
                            execute(SendMessage.builder()
                                    .text("усп что то не то ввели ведите заново или отмените \n/otmena")
@@ -136,7 +149,8 @@ public class Bot extends TelegramLongPollingBot{
                    }
                }
 
-                if(logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity")){
+                if(logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals("RegistrationOnCity%")){
+                    System.out.println(1);
                     String s = logic.getTimeFromPage(message.getText());
                     if (s.equals("Город не найден")){
                         execute(SendMessage.builder()
@@ -184,6 +198,7 @@ public class Bot extends TelegramLongPollingBot{
 
 
                 if (zz[1].equals("выбираем город") && message.hasText()) {
+                    System.out.println("1");
                     execute(SendMessage.builder()
                             .text(logic.getTimeFromPage(message.getText()))
                             .chatId(message.getChatId().toString())
