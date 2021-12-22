@@ -143,8 +143,14 @@ public class Logic {
         String[] defolt = {"не то"};
 
             switch (command) {
+                case"Выберете число этого месяца и укажите повтор:":
+                    System.out.println(22);
+                    String[] arraystr = {"1-каждый день ",
+                            "7-каждую неделю"};
 
-
+                    result.setMyArray(arraystr);
+                    result.setResult("пример");
+                    return result;
                 case "/RegistrationForA_Month":
                     ArrayList<String> Buttons = new ArrayList<String>();
                     String str = new String("");
@@ -212,7 +218,8 @@ public class Logic {
                                     "\n /RegistrationForA_Month " +
                                     "\n Для того чтобы пользоваться этим ботом необходимо привязаться к городу дефолт Лондон" +
                                     "\n команда для привязки " +
-                                    "\n /RegistrationOnCity");
+                                    "\n /RegistrationOnCity" +
+                                    "\n/RegistrationWithRepeat");
 
                     result.setMyArray(defolt);
                     return result;
@@ -286,7 +293,8 @@ public class Logic {
                                     "\n /DeleteTask" +
                                     " \n /MyTask" +
                                     " \n /LookAtWatch" +
-                                    " \n /RegistrationForA_Week");
+                                    " \n /RegistrationForA_Week" +
+                                    "\n/RegistrationWithRepeat");
 
                     result.setMyArray(defolt);
                     return result;
@@ -298,7 +306,8 @@ public class Logic {
                                     " /DeleteTask " +
                                     "\n /MyTask " +
                                     "\n /LookAtWatch " +
-                                    "\n /RegistrationForA_Month ");
+                                    "\n /RegistrationForA_Month" +
+                                    "\n/RegistrationWithRepeat ");
                     result.setMyArray(defolt);
                     return result;
             }

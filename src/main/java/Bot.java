@@ -43,6 +43,7 @@ public class Bot extends TelegramLongPollingBot{
         if ((message.getText().equals("Выберете число этого месяца и укажите повтор:"))){
             execute(SendMessage.builder().chatId(message.getChatId().toString()).text("Введите итересующие вас время и задачу в формате" +
                     "\n 99:99-ваша задача-перриуд").build());
+            sendToUser(logic.switchMessage(message.getText(),message.getChatId().toString()),message.getChatId().toString());
         }
 
         if(message.getText().equals("Нажмите на то что хотите удалить:")){
@@ -89,6 +90,7 @@ public class Bot extends TelegramLongPollingBot{
                        if (matcher.matches()) {
                            System.out.println("все сделано правильно");
                            String[] data = message.getText().split("-");
+
                            System.out.println(data[0] + " " + data[1] + " " + data[2]);
                            //время задача и число повторений
                        }
