@@ -40,7 +40,7 @@ public class MultiThread extends Thread {
                     System.out.println("все просроченныые задачи удалены");
                 }
             }
-            sleep(60000);
+            sleep(30000);
         }
     }
 }

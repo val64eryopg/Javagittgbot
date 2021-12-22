@@ -244,7 +244,31 @@ public class Logic {
 
                     return result;
 
-                case "/DeleteTask":
+              case "/OverdueTasks":
+
+                  result.setResult("Вот ваши просроченные задачи");
+                  try {
+                    ArrayList<String> check = database.checkOverdueTasks(chatId);
+                    if (check.size() != 0) {
+                      String[] array111 = new String[check.size()];
+                      for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
+                      result.setMyArray(array111);
+                      return result;
+                    } else {
+                      check.add("нет данных");
+                      String[] arrayStr = new String[check.size()];
+                      for (int i = 0; i < check.size(); i++) arrayStr[i] = check.get(i);
+                      result.setMyArray(arrayStr);
+                      return result;
+
+                    }
+                  } catch (ClassNotFoundException | SQLException ex) {
+                    result.setMyArray(defolt);
+                  }
+                  return result;
+
+
+              case "/DeleteTask":
 
                     result.setResult("Нажмите на то что хотите удалить:");
                     try {
@@ -316,8 +340,8 @@ public class Logic {
         throws SQLException, ClassNotFoundException {
         // перезаписывает просроченные задачи и корректирует повторения задач
         ArrayList<String> task = database.parseTask(chatId, data, time);
-        database.addOverdueTask(chatId, data, time, "задача", "-1");
-        String rep = task.get(0).split(" ")[3];
+        database.addOverdueTask(chatId, data, time, task.get(0).split("%")[2], "-1");
+        String rep = task.get(0).split("%")[3];
         System.out.println(rep.equals("0"));
 
         System.out.println(chatId+"%"+data+"%"+time);
@@ -334,8 +358,8 @@ public class Logic {
             else
                 System.out.println("Задача не удалена");
 
-            data = changeDate(task.get(0).split(" ")[0], rep);
-            writing(chatId, data, time, task.get(0).split(" ")[2], rep);
+            data = changeDate(task.get(0).split("%")[0], rep);
+            writing(chatId, data, time, task.get(0).split("%")[2], rep);
             System.out.println(chatId+"%"+data+"%"+time);
         }
         System.out.println("DeleteTask отработал");

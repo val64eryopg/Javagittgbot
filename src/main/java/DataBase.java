@@ -55,9 +55,9 @@ class Database {
           "SELECT * from tasks where chat_id = '"+chat_id+"' AND date_task = '"+date_task+"' AND time_task = '"+time_task+"'");
 
       while (resultSet.next()) {
-        result.add(resultSet.getString(3) + " " +
-            resultSet.getString(4) + " " +
-            resultSet.getString(5) + " "+
+        result.add(resultSet.getString(3) + "%" +
+            resultSet.getString(4) + "%" +
+            resultSet.getString(5) + "%"+
             resultSet.getString(6));
       }
     } catch (Exception e){
