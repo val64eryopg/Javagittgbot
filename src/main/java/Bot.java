@@ -115,7 +115,9 @@ public class Bot extends TelegramLongPollingBot{
                        String regex = "\\d{1,2}:\\d{2}-.+";
                        Pattern pattern = Pattern.compile(regex);
                        Matcher matcher = pattern.matcher(message.getText());
+
                        if (matcher.matches()) {
+                           String[] splitMessege = message.getText().split("-");
                            try {
                                String[] z = logic.database.parseUserCondition(message.getChatId().toString()).get(0).split("%");
                                System.out.println(z[0] + " " + z[1]);
@@ -134,10 +136,14 @@ public class Bot extends TelegramLongPollingBot{
                                        .build());
                                String[] timeAndDo = messages.split("-");
                                logic.database.delUserCondition(message.getChatId().toString());
-                               if (splitMessege.legth == 2)
-                                   logic.writing(message.getChatId().toString(), result, timeAndDo[0], timeAndDo[1], 0);
-                               else if splitMessege.legth == 3
-                                    logic.writing(message.getChatId().toString(), result, timeAndDo[0], timeAndDo[1], splitMesege[2]);
+                               if (splitMessege.length == 2) {
+//                                   logic.writing(message.getChatId().toString(), result, timeAndDo[0], timeAndDo[1], 0);
+
+                               }
+                               else if (splitMessege.length == 3) {
+                                   System.out.println(splitMessege[2]);
+                                   //logic.writing(message.getChatId().toString(), result, timeAndDo[0], timeAndDo[1], splitMessege[2]);
+                               }
                            } catch (Throwable e) {
                                System.out.println("видать ошибка в том что массив пустой"
                                );
