@@ -244,31 +244,7 @@ public class Logic {
 
                     return result;
 
-              case "/OverdueTasks":
-
-                  result.setResult("Вот ваши просроченные задачи");
-                  try {
-                    ArrayList<String> check = database.checkOverdueTasks(chatId);
-                    if (check.size() != 0) {
-                      String[] array111 = new String[check.size()];
-                      for (int i = 0; i < check.size(); i++) array111[i] = check.get(i);
-                      result.setMyArray(array111);
-                      return result;
-                    } else {
-                      check.add("нет данных");
-                      String[] arrayStr = new String[check.size()];
-                      for (int i = 0; i < check.size(); i++) arrayStr[i] = check.get(i);
-                      result.setMyArray(arrayStr);
-                      return result;
-
-                    }
-                  } catch (ClassNotFoundException | SQLException ex) {
-                    result.setMyArray(defolt);
-                  }
-                  return result;
-
-
-              case "/DeleteTask":
+                case "/DeleteTask":
 
                     result.setResult("Нажмите на то что хотите удалить:");
                     try {

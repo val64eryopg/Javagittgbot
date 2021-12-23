@@ -25,7 +25,7 @@ public class Bot extends TelegramLongPollingBot{
         if (update.hasCallbackQuery()) {
             handleCallback(update.getCallbackQuery());
         } else
-            if (update.hasMessage()) {
+        if (update.hasMessage()) {
             handleMessage(update.getMessage());
         }
     }
@@ -48,7 +48,7 @@ public class Bot extends TelegramLongPollingBot{
 
         if(message.getText().equals("Нажмите на то что хотите удалить:")){
             execute(SendMessage.builder().chatId(message.getChatId().toString()).text(
-                "задача успешно удалена").build());}
+                    "задача успешно удалена").build());}
     }
 
 
@@ -59,14 +59,14 @@ public class Bot extends TelegramLongPollingBot{
 
         if (message.hasText() && message.hasEntities()) {
             Optional<MessageEntity> commandEntity =
-                message.getEntities().stream().filter(e -> "bot_command".equals(e.getType()))
-                    .findFirst();
+                    message.getEntities().stream().filter(e -> "bot_command".equals(e.getType()))
+                            .findFirst();
             if (commandEntity.isPresent()) {
                 String command =
-                    message.getText().substring(commandEntity.get().getOffset(),
-                        commandEntity.get().getLength());
+                        message.getText().substring(commandEntity.get().getOffset(),
+                                commandEntity.get().getLength());
                 sendToUser(logic.switchMessage(command, message.getChatId().toString()),
-                    message.getChatId().toString());
+                        message.getChatId().toString());
                 System.out.println("случилось непредвиденное");
             }
         } else {
@@ -76,7 +76,7 @@ public class Bot extends TelegramLongPollingBot{
             if (logic.database.checkUserCondition(ID)) {
 
                 String[] userCond = logic.database.parseUserCondition(
-                    message.getChatId().toString()).get(0).split("%");
+                        message.getChatId().toString()).get(0).split("%");
                 System.out.println(userCond[0]);
                 System.out.println(logic.database.parseUserCondition(ID).get(0).split(" ")[1]);
 
@@ -93,11 +93,11 @@ public class Bot extends TelegramLongPollingBot{
                             System.out.println(message.getText());
                             try {
                                 String[] z = logic.database.parseUserCondition(
-                                    message.getChatId().toString()).get(0).split("%");
+                                        message.getChatId().toString()).get(0).split("%");
                                 System.out.println(z[0] + " " + z[1]);
                                 Date date = new Date();
                                 Calendar cal = Calendar.getInstance(
-                                    TimeZone.getTimeZone("Europe/Paris"));
+                                        TimeZone.getTimeZone("Europe/Paris"));
                                 cal.setTime(date);
                                 int year = cal.get(Calendar.YEAR);
                                 int month = cal.get(Calendar.MONTH) + 1;
@@ -106,18 +106,18 @@ public class Bot extends TelegramLongPollingBot{
                                 System.out.println(result);
                                 String messages = message.getText();
                                 execute(SendMessage.builder()
-                                    .text("Задача записана: " + messages)
-                                    .chatId(message.getChatId().toString())
-                                    .build());
+                                        .text("Задача записана: " + messages)
+                                        .chatId(message.getChatId().toString())
+                                        .build());
                                 String[] timeAndDo = messages.split("-");
                                 logic.database.delUserCondition(message.getChatId().toString());
                                 if (splitMessege.length == 2) {
                                     logic.writing(message.getChatId().toString(), result,
-                                        timeAndDo[0], timeAndDo[1], "0");
+                                            timeAndDo[0], timeAndDo[1], "0");
                                 } else if (splitMessege.length == 3) {
                                     System.out.println(splitMessege[2]);
                                     logic.writing(message.getChatId().toString(), result,
-                                        timeAndDo[0], timeAndDo[1], splitMessege[2]);
+                                            timeAndDo[0], timeAndDo[1], splitMessege[2]);
                                 }
                             } catch (Throwable e) {
                                 System.out.println("видать ошибка в том что массив пустой");
@@ -125,22 +125,22 @@ public class Bot extends TelegramLongPollingBot{
                         }
                     } else {
                         execute(SendMessage.builder()
-                            .text("усп что то не то ввели ведите заново или отмените \n/otmena")
-                            .chatId(message.getChatId().toString())
-                            .build());
+                                .text("усп что то не то ввели ведите заново или отмените \n/otmena")
+                                .chatId(message.getChatId().toString())
+                                .build());
                     }
                 }
 
                 if (logic.database.parseUserCondition(ID).get(0).split(" ")[1].equals(
-                    "RegistrationOnCity%")) {
+                        "RegistrationOnCity%")) {
                     System.out.println(1);
                     String s = logic.getTimeFromPage(message.getText());
                     if (s.equals("Город не найден")) {
                         execute(SendMessage.builder()
-                            .text(
-                                "к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса или напишите его правильно")
-                            .chatId(message.getChatId().toString())
-                            .build());
+                                .text(
+                                        "к сожалению ваш город не найден попробуйте указать другой город такого же часового пояса или напишите его правильно")
+                                .chatId(message.getChatId().toString())
+                                .build());
                         logic.database.delUserCondition(message.getChatId().toString());
                     } else {
                         String regex = "\\S{2} \\d{1,2}:\\d{1,2}";
@@ -152,26 +152,26 @@ public class Bot extends TelegramLongPollingBot{
                                 logic.database.delUserCity(message.getChatId().toString());
 
                                 logic.database.addUserCity(message.getChatId().toString(),
-                                    logic.gettingTimeZone(s));
+                                        logic.gettingTimeZone(s));
                                 execute(SendMessage.builder()
-                                    .text("ваше текущее время: " + s)
-                                    .chatId(ID)
-                                    .build());
+                                        .text("ваше текущее время: " + s)
+                                        .chatId(ID)
+                                        .build());
                                 logic.database.delUserCondition(ID);
                             } else {
                                 logic.database.addUserCity(ID, logic.gettingTimeZone(s));
                                 execute(SendMessage.builder()
-                                    .text("ваше текущее время: " + s)
-                                    .chatId(message.getChatId().toString())
-                                    .build());
+                                        .text("ваше текущее время: " + s)
+                                        .chatId(message.getChatId().toString())
+                                        .build());
                                 logic.database.delUserCondition(message.getChatId().toString());
                             }
                         } else {
                             execute(SendMessage.builder()
-                                .text("Ваш город пока не подключен" +
-                                    "\n попробуйте указать город с вашим часовым поясом")
-                                .chatId(message.getChatId().toString())
-                                .build());
+                                    .text("Ваш город пока не подключен" +
+                                            "\n попробуйте указать город с вашим часовым поясом")
+                                    .chatId(message.getChatId().toString())
+                                    .build());
                             logic.database.delUserCondition(message.getChatId().toString());
                         }
                     }
@@ -179,16 +179,16 @@ public class Bot extends TelegramLongPollingBot{
                 }
                 if (userCond[1].equals("выбираем город") && message.hasText()) {
                     execute(SendMessage.builder()
-                        .text(logic.getTimeFromPage(message.getText()))
-                        .chatId(message.getChatId().toString())
-                        .build());
+                            .text(logic.getTimeFromPage(message.getText()))
+                            .chatId(message.getChatId().toString())
+                            .build());
                     logic.database.delUserCondition(message.getChatId().toString());
                 }
             } else {
                 execute(SendMessage.builder()
-                    .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
-                    .chatId(message.getChatId().toString())
-                    .build());
+                        .text("данный бот не умеет говорить воспользуйтесь командой /HELP")
+                        .chatId(message.getChatId().toString())
+                        .build());
             }
         }
     }
@@ -211,6 +211,7 @@ public class Bot extends TelegramLongPollingBot{
                     .build());
 
         }
+
         else{
             System.out.println("else");
             execute(SendMessage.builder()
